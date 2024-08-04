@@ -1,8 +1,13 @@
 from __future__ import annotations
 
 import typing
+import inspect
 
 from collections.abc import Iterable
+
+if typing.TYPE_CHECKING:
+    from quickhtml import QuickHTML
+
 
 class BaseTag:
     """
@@ -22,12 +27,47 @@ class BaseTag:
         render(): Renders the HTML representation of the tag and its child tags.
     """
 
-    def __init__(self, *tags, **attrs):
+    def __init__(self, *tags, callback: typing.Callable = None, **attrs):
         self.tag = self.__class__.__qualname__.lower()
         self.tags = list(tags)
         self.attrs = attrs
+        if callback:
+            self.add_callback(callback)
 
-    def add_head(self, head: typing.Iterable['BaseTag'] | 'BaseTag'):
+    @property
+    def app(self) -> "QuickHTML":
+        """
+        Returns the current FastAPI application instance.
+
+        Returns:
+            FastAPI: The current FastAPI application instance.
+        """
+        from quickhtml import QuickHTML
+
+        # Get the current FastAPI application instance
+        # TODO: Find a better way to get the current FastAPI application instance
+        for var in inspect.stack()[-1].frame.f_locals.values():
+            if isinstance(var, QuickHTML):
+                app = var
+                break
+
+        return app
+
+    def add_callback(self, callback: typing.Callable):
+        """
+        Adds a callback function to the tag.
+
+        Args:
+            callback (typing.Callable): The callback function to be added.
+        """
+        self.app.add_route(
+            f"/python-callbacks/{id(callback)}",
+            callback,
+        )
+
+        self.attrs["hx-get"] = self.callback_route
+
+    def add_head(self, head: typing.Iterable["BaseTag"] | "BaseTag"):
         """
         Adds a head tag to the beginning of the list of child tags.
 
@@ -53,6 +93,11 @@ class BaseTag:
                 # Translate the keyword argument class_ to class
                 if key == "class_":
                     key = "class"
+
+                # Translate value None to 'none'
+                if value is None:
+                    value = "none"
+
                 # Replace underscores with hyphens
                 key = key.replace("_", "-")
                 ret_html += f"{key}='{value}' "
@@ -60,14 +105,14 @@ class BaseTag:
                 ret_html = ret_html[:-1] + ">"
         else:
             ret_html = f"<{self.tag}>"
-        
+
         # Recursively render child tags
         for tag in self.tags:
             if isinstance(tag, BaseTag):
                 ret_html += tag.render()
             else:
                 ret_html += tag
-        
+
         # Close the tag
         ret_html += f"</{self.tag}>"
         return ret_html

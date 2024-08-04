@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import typing
+import inspect
 
 from starlette.requests import Request
 from starlette.routing import Route, Router
@@ -34,7 +35,14 @@ class QuickHTMLRoute(Route):
         Returns:
             Response: The modified response object.
         """
-        response = await self.endpoint_func(request)
+        # I hate having to include `request` in every route, so let's give
+        # the option to not
+        if "request" in inspect.signature(self.endpoint_func).parameters:
+            response = await self.endpoint_func(request=request)
+        else:
+            response = await self.endpoint_func()
+
+        # Handle different response types
         if isinstance(response, BaseTag):
             response.add_head(self.html_head)
             response = QuickHTMLResponse(response)
@@ -42,6 +50,8 @@ class QuickHTMLRoute(Route):
             response = JSONResponse(response)
         elif isinstance(response, str):
             response = PlainTextResponse(response)
+        elif response is None:
+            response = Response()
         return response
 
 
