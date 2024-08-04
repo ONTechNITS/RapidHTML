@@ -17,7 +17,10 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest",
-    "black",
+    "ruff",
 ]
 
-[tool.black]
+[tool.ruff.lint.per-file-ignores]
+"src/quickhtml/tags.py" = [
+    "E742",
+]
