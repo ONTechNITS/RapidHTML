@@ -4,6 +4,7 @@ import typing
 
 from collections.abc import Iterable
 
+
 class BaseTag:
     """
     Represents a base HTML tag.
@@ -27,7 +28,7 @@ class BaseTag:
         self.tags = list(tags)
         self.attrs = attrs
 
-    def add_head(self, head: typing.Iterable['BaseTag'] | 'BaseTag'):
+    def add_head(self, head: typing.Iterable["BaseTag"] | "BaseTag"):
         """
         Adds a head tag to the beginning of the list of child tags.
 
@@ -60,14 +61,14 @@ class BaseTag:
                 ret_html = ret_html[:-1] + ">"
         else:
             ret_html = f"<{self.tag}>"
-        
+
         # Recursively render child tags
         for tag in self.tags:
             if isinstance(tag, BaseTag):
                 ret_html += tag.render()
             else:
                 ret_html += tag
-        
+
         # Close the tag
         ret_html += f"</{self.tag}>"
         return ret_html
