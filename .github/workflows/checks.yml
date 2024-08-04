@@ -1,0 +1,26 @@
+name: reviewdog
+
+on: [pull_request]
+
+jobs:
+  check-code-style:
+    name: runner / black formatter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install black==23.1.0
+      - uses: reviewdog/action-black@v3
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-check
+          level: error
+  test-code:
+    name: runner / pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - run: pip install -e '.[dev]'
+      - run: pytest
