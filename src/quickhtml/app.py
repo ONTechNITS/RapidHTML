@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import typing
 
+import uvicorn
+
 from starlette.applications import Starlette
 
 from quickhtml.tags import *
@@ -26,3 +28,6 @@ class QuickHTML(Starlette):
             html_head
         )
         self.router = QuickHTMLRouter(html_head=self.html_head)
+
+    def serve(self, *args, **kwargs):
+        uvicorn.run(self, *args, **kwargs)

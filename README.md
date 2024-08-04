@@ -22,4 +22,8 @@ async def homepage(request):
 @app.route('/data')
 async def data(request):
     return "Clicked!"
+
+app.serve()
 ```
+
+This will serve the app at http://localhost:8000

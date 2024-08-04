@@ -10,7 +10,7 @@ description = "QuickHTML is a Python library for generating HTML documents."
 readme = "README.md"
 dependencies = [
     "starlette",
-    "uvicorn",
+    "uvicorn[standard]",
     "httpx",
 ]
 
