@@ -46,10 +46,11 @@ class BaseTag:
 
         # Get the current FastAPI application instance
         # TODO: Find a better way to get the current FastAPI application instance
-        for var in inspect.stack()[-1].frame.f_locals.values():
-            if isinstance(var, QuickHTML):
-                app = var
-                break
+        for frame in inspect.stack():
+            for var in frame.frame.f_locals.values():
+                if isinstance(var, QuickHTML):
+                    app = var
+                    break
 
         return app
 
@@ -60,8 +61,10 @@ class BaseTag:
         Args:
             callback (typing.Callable): The callback function to be added.
         """
+        self.callback_route = f"/python-callbacks/{id(callback)}"
+        
         self.app.add_route(
-            f"/python-callbacks/{id(callback)}",
+            self.callback_route,
             callback,
         )
 
