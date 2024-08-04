@@ -6,7 +6,7 @@ import uvicorn
 
 from starlette.applications import Starlette
 
-from quickhtml.tags import *
+from quickhtml.tags import Script
 from quickhtml.routing import QuickHTMLRouter
 
 
