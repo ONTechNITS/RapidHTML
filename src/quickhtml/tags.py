@@ -1,3 +1,9 @@
+from __future__ import annotations
+
+import typing
+
+from collections.abc import Iterable
+
 class BaseTag:
     """
     Represents a base HTML tag.
@@ -21,13 +27,15 @@ class BaseTag:
         self.tags = list(tags)
         self.attrs = attrs
 
-    def add_head(self, head):
+    def add_head(self, head: typing.Iterable['BaseTag'] | 'BaseTag'):
         """
         Adds a head tag to the beginning of the list of child tags.
 
         Args:
             head: The head tag to be added.
         """
+        if not isinstance(head, Iterable):
+            head = (head,)
         if head:
             self.tags.insert(0, Head(*head))
 
@@ -38,20 +46,29 @@ class BaseTag:
         Returns:
             str: The HTML representation of the tag and its child tags.
         """
+        # Apply tag attributes
         if self.attrs:
             ret_html = f"<{self.tag} "
             for key, value in self.attrs.items():
+                # Translate the keyword argument class_ to class
+                if key == "class_":
+                    key = "class"
+                # Replace underscores with hyphens
                 key = key.replace("_", "-")
-                ret_html += f"{key}='{value}', "
+                ret_html += f"{key}='{value}' "
             else:
-                ret_html = ret_html[:-2] + ">"
+                ret_html = ret_html[:-1] + ">"
         else:
             ret_html = f"<{self.tag}>"
+        
+        # Recursively render child tags
         for tag in self.tags:
             if isinstance(tag, BaseTag):
                 ret_html += tag.render()
             else:
                 ret_html += tag
+        
+        # Close the tag
         ret_html += f"</{self.tag}>"
         return ret_html
 
