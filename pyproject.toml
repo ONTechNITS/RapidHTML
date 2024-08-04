@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools"]
+
+[project]
+name = "quickhtml"
+license = { file = "LICENSE" }
+version = "0.1.0"
+requires-python = ">=3.8"
+description = "QuickHTML is a Python library for generating HTML documents."
+readme = "README.md"
+dependencies = [
+    "starlette",
+    "uvicorn",
+    "httpx",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+]
+
+[tool.black]
