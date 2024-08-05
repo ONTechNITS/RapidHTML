@@ -1,4 +1,3 @@
-import typing
 import inspect
 
 from functools import lru_cache
