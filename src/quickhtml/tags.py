@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import typing
-import inspect
 
 from collections.abc import Iterable
+
+from quickhtml.utils import get_app
 
 if typing.TYPE_CHECKING:
     from quickhtml import QuickHTML
@@ -43,17 +44,7 @@ class BaseTag:
         Returns:
             FastAPI: The current FastAPI application instance.
         """
-        from quickhtml import QuickHTML
-
-        # Get the current FastAPI application instance
-        # TODO: Find a better way to get the current FastAPI application instance
-        for frame in inspect.stack():
-            for var in frame.frame.f_locals.values():
-                if isinstance(var, QuickHTML):
-                    app = var
-                    break
-
-        return app
+        return get_app()
 
     def add_callback(self, callback: typing.Callable):
         """
