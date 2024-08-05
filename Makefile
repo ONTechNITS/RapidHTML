@@ -1,4 +1,4 @@
-.PHONY: lint test format github-checks
+.PHONY: lint test format github-checks docs_serve
 
 lint:
 	@echo "Running linter on src/"
@@ -18,3 +18,7 @@ format:
 
 github-checks: test lint
 	@echo "\nTests and linting passed"
+
+docs_serve:
+	@echo "Serving docs"
+	@sphinx-autobuild --port 0 docs docs/_build

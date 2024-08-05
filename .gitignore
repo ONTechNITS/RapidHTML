@@ -134,3 +134,6 @@ __pycache__
 venv/
 *.egg-info
 main.py
+
+# Sphinx documentation
+docs/_build/

@@ -18,6 +18,8 @@ dependencies = [
 dev = [
     "pytest",
     "ruff",
+    "sphinx",
+    "sphinx-autobuild",
 ]
 
 [tool.ruff.lint.per-file-ignores]
