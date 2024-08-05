@@ -8,6 +8,7 @@ from quickhtml.utils import get_app
 
 if typing.TYPE_CHECKING:
     from quickhtml import QuickHTML
+    from starlette.applications import Starlette
 
 
 class BaseTag:
@@ -37,12 +38,12 @@ class BaseTag:
             self.add_callback(callback)
 
     @property
-    def app(self) -> "QuickHTML":
+    def app(self) -> "QuickHTML" | "Starlette":
         """
         Returns the current QuickHTML application instance.
 
         Returns:
-            QuickHTML: The current QuickHTML application instance.
+            QuickHTML | Starlette: The current QuickHTML application instance.
         """
         return get_app()
 
