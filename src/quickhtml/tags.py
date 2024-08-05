@@ -15,6 +15,7 @@ class BaseTag:
 
     Args:
         *tags: Variable length arguments representing child tags.
+        callback (typing.Callable): A callback function to be added to the tag.
         **attrs: Keyword arguments representing tag attributes.
 
     Attributes:
