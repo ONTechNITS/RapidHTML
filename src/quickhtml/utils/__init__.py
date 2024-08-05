@@ -3,21 +3,18 @@ import inspect
 
 from functools import lru_cache
 
-if typing.TYPE_CHECKING:
-    from quickhtml import QuickHTML
+from starlette.applications import Starlette
 
 @lru_cache
-def get_app() -> "QuickHTML":
-    """Returns the current FastAPI application instance.
+def get_app() -> "Starlette":
+    """Returns the current Starlette application instance.
 
     Returns:
-        QuickHTML: The current FastAPI application instance.
+        Starlette: The current Starlette application instance.
     """
-    from quickhtml import QuickHTML
-
-    # Get the current FastAPI application instance
-    # TODO: Find a better way to get the current FastAPI application instance
+    # Get the current Starlette application instance
+    # TODO: Find a better way to get the current Starlette application instance
     for frame in inspect.stack():
         for var in frame.frame.f_locals.values():
-            if isinstance(var, QuickHTML):
+            if isinstance(var, Starlette):
                 return var
