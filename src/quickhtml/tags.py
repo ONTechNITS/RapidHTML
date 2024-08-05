@@ -4,6 +4,11 @@ import typing
 
 from collections.abc import Iterable
 
+from quickhtml.utils import get_app
+
+if typing.TYPE_CHECKING:
+    from quickhtml import QuickHTML
+
 
 class BaseTag:
     """
@@ -11,6 +16,7 @@ class BaseTag:
 
     Args:
         *tags: Variable length arguments representing child tags.
+        callback (typing.Callable): A callback function to be added to the tag.
         **attrs: Keyword arguments representing tag attributes.
 
     Attributes:
@@ -23,10 +29,38 @@ class BaseTag:
         render(): Renders the HTML representation of the tag and its child tags.
     """
 
-    def __init__(self, *tags, **attrs):
+    def __init__(self, *tags, callback: typing.Callable = None, **attrs):
         self.tag = self.__class__.__qualname__.lower()
         self.tags = list(tags)
         self.attrs = attrs
+        if callback:
+            self.add_callback(callback)
+
+    @property
+    def app(self) -> "QuickHTML":
+        """
+        Returns the current QuickHTML application instance.
+
+        Returns:
+            QuickHTML: The current QuickHTML application instance.
+        """
+        return get_app()
+
+    def add_callback(self, callback: typing.Callable):
+        """
+        Adds a callback function to the tag.
+
+        Args:
+            callback (typing.Callable): The callback function to be added.
+        """
+        self.callback_route = f"/python-callbacks/{id(callback)}"
+        
+        self.app.add_route(
+            self.callback_route,
+            callback,
+        )
+
+        self.attrs["hx-get"] = self.callback_route
 
     def add_head(self, head: typing.Iterable["BaseTag"] | "BaseTag"):
         """
@@ -54,6 +88,11 @@ class BaseTag:
                 # Translate the keyword argument class_ to class
                 if key == "class_":
                     key = "class"
+
+                # Translate value None to 'none'
+                if value is None:
+                    value = "none"
+
                 # Replace underscores with hyphens
                 key = key.replace("_", "-")
                 ret_html += f"{key}='{value}' "

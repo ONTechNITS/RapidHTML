@@ -1,3 +1,6 @@
+from starlette.testclient import TestClient
+
+from quickhtml import QuickHTML
 from quickhtml.tags import Html, H1, Body, Title
 
 
@@ -59,4 +62,17 @@ def test_tag_name():
     assert test_body.tag == "body"
 
     test_h1 = H1()
-    assert test_h1.tag == "h1"
+    assert test_h1.tag == 'h1'
+    
+def test_tag_callback():
+    async def callback():
+        return "Callback"
+    
+    test_app = QuickHTML()
+    
+    test_html = Html(callback=callback)
+    assert test_html.attrs['hx-get'] == '/python-callbacks/{}'.format(id(callback))
+    
+    client = TestClient(test_app)
+    response = client.get(test_html.attrs['hx-get'])
+    assert response.text == 'Callback'
