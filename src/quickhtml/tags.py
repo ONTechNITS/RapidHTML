@@ -39,10 +39,10 @@ class BaseTag:
     @property
     def app(self) -> "QuickHTML":
         """
-        Returns the current FastAPI application instance.
+        Returns the current QuickHTML application instance.
 
         Returns:
-            FastAPI: The current FastAPI application instance.
+            QuickHTML: The current QuickHTML application instance.
         """
         return get_app()
 
