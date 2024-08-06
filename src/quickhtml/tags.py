@@ -109,7 +109,7 @@ class BaseTag:
             ret_html += f"{key}='{value}' "
 
         if not self.__self_closing:
-            ret_html += ">"
+            ret_html = ret_html.rstrip() + ">"  # Take out trailing spaces
 
         # Recursively render child tags
         for tag in self.tags:
