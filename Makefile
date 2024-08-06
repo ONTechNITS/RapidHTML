@@ -1,20 +1,46 @@
-.PHONY: lint test format github-checks
+# Assume `poetry` exists within PATH by default
+POETRY_BIN ?= poetry
 
-lint:
-	@echo "Running linter on src/"
-	@ruff check src/
-	@echo "Running linter on tests/"
-	@ruff check tests/
+# Used in `format` and `link`. If True, check if changes are needed.
+CHECK ?= false
 
-test:
-	@echo "Running tests"
-	@pytest
+# Indicate if the current build is a DEV environment. True by default.
+DEV ?= true
 
+.PHONY:help
+help:
+	@echo "Available targets:"
+	@echo "  install    Install dependencies"
+	@echo "  format     Format all code within src/quickhtml"
+	@echo "  lint       Link all code within src/quickhtml"
+	@echo "  lock       Update the poetry lock file"
+
+.PHONY:install-dev
+install-dev:
+ifeq ($(DEV),true)
+	@$(POETRY_BIN) install --only dev
+endif
+
+.PHONY:install
+install:install-dev
+	@$(POETRY_BIN) install
+
+.PHONY:lock
+lock:
+ifeq ($(CHECK),true)
+	@$(POETRY_BIN) check --lock
+else
+	@$(POETRY_BIN) lock
+endif
+
+.PHONY:format
 format:
-	@echo "Running formatter on src/"
-	@ruff format src/
-	@echo "Running formatter on tests/"
-	@ruff format tests/
-
-github-checks: test lint
-	@echo "\nTests and linting passed"
+ifeq ($(CHECK),true)
+		@$(POETRY_BIN) run ruff format --check
+else
+		@$(POETRY_BIN) run ruff format
+endif
+    
+.PHONY:lint
+lint:
+	@$(POETRY_BIN) run ruff check
