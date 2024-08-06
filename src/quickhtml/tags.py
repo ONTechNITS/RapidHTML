@@ -39,7 +39,9 @@ class BaseTag:
             self.add_callback(callback)
 
         if self.tags and self.__self_closing:
-            raise ValueError(f"{self.tag} does not support nesting other tags within it")
+            raise ValueError(
+                f"{self.tag} does not support nesting other tags within it"
+            )
 
         self.__closing_tag = f"</{self.tag}>" if not self.__self_closing else "/>"
 
