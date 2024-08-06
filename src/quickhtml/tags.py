@@ -96,8 +96,7 @@ class BaseTag:
         ret_html = f"<{self.tag} "
 
         for key, value in self.attrs.items():
-            if key == "class_":
-                key = "class"
+            key = key.rstrip("_")
 
             # Translate value None to 'none'
             if value is None:
