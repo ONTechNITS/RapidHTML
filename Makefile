@@ -36,9 +36,9 @@ endif
 .PHONY:format
 format:
 ifeq ($(CHECK),true)
-		@$(POETRY_BIN) run ruff format --check
+	@$(POETRY_BIN) run ruff format --check
 else
-		@$(POETRY_BIN) run ruff format
+	@$(POETRY_BIN) run ruff format
 endif
     
 .PHONY:lint
