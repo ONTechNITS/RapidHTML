@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Web framework to generate web-based applications in pure python"
 authors = [
     "ThomasJRyan <18319621+ThomasJRyan@users.noreply.github.com>",
-    "moseye  <moseye@nits.com>",  # TODO: Update before merging
+    "moseye      <156830683+moseye@users.noreply.github.com>",
     "rashidnhm   <95639609+rashidnhm@users.noreply.github.com>",
 ]
 readme = "README.md"
