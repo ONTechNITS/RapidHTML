@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Setup Build Environment
         uses: ./.github/workflows/setup_build_environment
         with:

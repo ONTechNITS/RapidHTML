@@ -22,10 +22,7 @@ inputs:
 runs:
   using: composite
 
-  steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    
+  steps:    
     - name: Set up Python
       id: setup_python
       uses: actions/setup-python@v5
