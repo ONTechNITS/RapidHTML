@@ -55,7 +55,7 @@ class BaseTag:
             callback (typing.Callable): The callback function to be added.
         """
         self.callback_route = f"/python-callbacks/{id(callback)}"
-        
+
         self.app.add_route(
             self.callback_route,
             callback,
