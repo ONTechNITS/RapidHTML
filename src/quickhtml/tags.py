@@ -126,7 +126,7 @@ class BaseTag:
         return ret_html
 
 
-class A(BaseTag): ...
+class HtmlTagA(BaseTag): ...
 
 
 class Abbr(BaseTag): ...
@@ -147,7 +147,7 @@ class Aside(BaseTag): ...
 class Audio(BaseTag): ...
 
 
-class B(BaseTag): ...
+class HtmlTagB(BaseTag): ...
 
 
 class Base(BaseTag, self_closing=True): ...
@@ -261,7 +261,7 @@ class Hr(BaseTag, self_closing=True): ...
 class Html(BaseTag): ...
 
 
-class I(BaseTag): ...
+class HtmlTagI(BaseTag): ...
 
 
 class Iframe(BaseTag): ...
@@ -330,7 +330,7 @@ class Option(BaseTag): ...
 class Output(BaseTag): ...
 
 
-class P(BaseTag): ...
+class HtmlTagP(BaseTag): ...
 
 
 class Picture(BaseTag): ...
@@ -345,7 +345,7 @@ class Pre(BaseTag): ...
 class Progress(BaseTag): ...
 
 
-class Q(BaseTag): ...
+class HtmlTagQ(BaseTag): ...
 
 
 class Rp(BaseTag): ...
@@ -357,7 +357,7 @@ class Rt(BaseTag): ...
 class Ruby(BaseTag): ...
 
 
-class S(BaseTag): ...
+class HtmlTagS(BaseTag): ...
 
 
 class Samp(BaseTag): ...
@@ -438,7 +438,7 @@ class Tr(BaseTag): ...
 class Track(BaseTag, self_closing=True): ...
 
 
-class U(BaseTag): ...
+class HtmlTagU(BaseTag): ...
 
 
 class Ul(BaseTag): ...
@@ -451,3 +451,123 @@ class Video(BaseTag): ...
 
 
 class Wbr(BaseTag, self_closing=True): ...
+
+
+A = HtmlTagA
+B = HtmlTagB
+I = HtmlTagI  # noqa
+P = HtmlTagP
+Q = HtmlTagQ
+S = HtmlTagS
+U = HtmlTagU
+
+__all__ = (
+    "A",
+    "Abbr",
+    "Address",
+    "Area",
+    "Article",
+    "Aside",
+    "Audio",
+    "B",
+    "Base",
+    "Bdi",
+    "Bdo",
+    "Blockquote",
+    "Body",
+    "Br",
+    "Button",
+    "Canvas",
+    "Caption",
+    "Cite",
+    "Code",
+    "Col",
+    "Colgroup",
+    "Data",
+    "Datalist",
+    "Dd",
+    "Del",
+    "Details",
+    "Dfn",
+    "Dialog",
+    "Div",
+    "Dl",
+    "Dt",
+    "Em",
+    "Embed",
+    "Fencedframe",
+    "Fieldset",
+    "Figcaption",
+    "Figure",
+    "Footer",
+    "Form",
+    "H1",
+    "Head",
+    "Header",
+    "Hgroup",
+    "Hr",
+    "Html",
+    "I",
+    "Iframe",
+    "Img",
+    "Input",
+    "Ins",
+    "Kbd",
+    "Label",
+    "Legend",
+    "Li",
+    "Link",
+    "Main",
+    "Map",
+    "Mark",
+    "Menu",
+    "Meta",
+    "Meter",
+    "Nav",
+    "Noscript",
+    "Object",
+    "Ol",
+    "Optgroup",
+    "Option",
+    "Output",
+    "P",
+    "Picture",
+    "PortalExperimental",
+    "Pre",
+    "Progress",
+    "Q",
+    "Rp",
+    "Ruby",
+    "S",
+    "Samp",
+    "Script",
+    "Search",
+    "Section",
+    "Select",
+    "Slot",
+    "Small",
+    "Source",
+    "Span",
+    "Strong",
+    "Style",
+    "Sub",
+    "Summary",
+    "Sup",
+    "Table",
+    "Tbody",
+    "Td",
+    "Template",
+    "Textarea",
+    "Tfoot",
+    "Th",
+    "Thead",
+    "Time",
+    "Title",
+    "Tr",
+    "Track",
+    "U",
+    "Ul",
+    "Var",
+    "Video",
+    "Wbr",
+)

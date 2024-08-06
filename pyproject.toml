@@ -27,8 +27,8 @@ ruff = "^0.5.6"
 [tool.ruff]
 include = ["src/quickhtml/*.py", "tests/*.py"]
 
-[tool.ruff.lint.per-file-ignores]
-"src/quickhtml/tags.py" = ["E742"]
+# [tool.ruff.lint.per-file-ignores]
+# "src/quickhtml/tags.py" = ["E742"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
