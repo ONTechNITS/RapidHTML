@@ -17,7 +17,7 @@ jobs:
       - name: Setup Build Environment
         uses: ./.github/workflows/setup_build_environment
         with:
-          python_version: '3.8'
+          python_version: '3.9'
       
       - name: Check Poetry lockfile
         run: make lock CHECK=true
