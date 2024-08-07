@@ -1,28 +1,40 @@
-[build-system]
-requires = ["setuptools"]
-
-[project]
+[tool.poetry]
 name = "quickhtml"
-license = { file = "LICENSE" }
 version = "0.1.0"
-requires-python = ">=3.8"
-description = "QuickHTML is a Python library for generating HTML documents."
+description = "Web framework to generate web-based applications in pure python"
+authors = [
+    "ThomasJRyan <18319621+ThomasJRyan@users.noreply.github.com>",
+    "moseye      <156830683+moseye@users.noreply.github.com>",
+    "rashidnhm   <95639609+rashidnhm@users.noreply.github.com>",
+]
 readme = "README.md"
-dependencies = [
-    "starlette",
-    "uvicorn[standard]",
-    "httpx",
-]
+package-mode = true
+packages = [{ include = "quickhtml", from = "src" }]
 
-[project.optional-dependencies]
-dev = [
-    "pytest",
-    "ruff",
-    "sphinx",
-    "sphinx-autobuild",
-]
+[tool.poetry.dependencies]
+python = "^3.8"
+starlette = "^0.38.2"
+httpx = "^0.27.0"
+uvicorn = { version = "^0.30.5", extras = ["standard"] }
 
-[tool.ruff.lint.per-file-ignores]
-"src/quickhtml/tags.py" = [
-    "E742",
-]
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+ruff = "^0.5.6"
+sphinx = "^8.0.2"
+sphinx-autobuild = "^2024.4.16"
+
+[tool.ruff]
+include = ["src/quickhtml/*.py", "tests/*.py"]
+
+# [tool.ruff.lint.per-file-ignores]
+# "src/quickhtml/tags.py" = ["E742"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

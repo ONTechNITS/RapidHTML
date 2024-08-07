@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 import typing
 
 from collections.abc import Iterable
@@ -37,6 +38,17 @@ class BaseTag:
         if callback:
             self.add_callback(callback)
 
+        if self.tags and self.__self_closing:
+            raise ValueError(
+                f"{self.tag} does not support nesting other tags within it"
+            )
+
+        self.__closing_tag = f"</{self.tag}>" if not self.__self_closing else "/>"
+
+    def __init_subclass__(cls, self_closing: bool = False, **kwargs) -> None:
+        super().__init_subclass__(**kwargs)
+        cls.__self_closing = self_closing
+
     @property
     def app(self) -> "QuickHTML" | "Starlette":
         """
@@ -55,7 +67,7 @@ class BaseTag:
             callback (typing.Callable): The callback function to be added.
         """
         self.callback_route = f"/python-callbacks/{id(callback)}"
-        
+
         self.app.add_route(
             self.callback_route,
             callback,
@@ -82,39 +94,39 @@ class BaseTag:
         Returns:
             str: The HTML representation of the tag and its child tags.
         """
-        # Apply tag attributes
-        if self.attrs:
-            ret_html = f"<{self.tag} "
-            for key, value in self.attrs.items():
-                # Translate the keyword argument class_ to class
-                if key == "class_":
-                    key = "class"
 
-                # Translate value None to 'none'
-                if value is None:
-                    value = "none"
+        ret_html = f"<{self.tag} "
 
-                # Replace underscores with hyphens
-                key = key.replace("_", "-")
-                ret_html += f"{key}='{value}' "
-            else:
-                ret_html = ret_html[:-1] + ">"
-        else:
-            ret_html = f"<{self.tag}>"
+        for key, value in self.attrs.items():
+            key = key.rstrip("_")
+
+            # Translate value None to 'none'
+            if value is None:
+                value = "none"
+
+            # Replace underscores with hyphens
+            key = key.replace("_", "-")
+            ret_html += f"{key}='{value}' "
+
+        if not self.__self_closing:
+            ret_html += ">"
 
         # Recursively render child tags
         for tag in self.tags:
             if isinstance(tag, BaseTag):
                 ret_html += tag.render()
+            elif hasattr(tag, "__str__"):
+                ret_html += html.escape(str(tag))
             else:
-                ret_html += tag
+                raise TypeError(f"Unexpected tag type {type(tag)}. {tag}")
 
         # Close the tag
-        ret_html += f"</{self.tag}>"
+        ret_html += self.__closing_tag
+
         return ret_html
 
 
-class A(BaseTag): ...
+class HtmlTagA(BaseTag): ...
 
 
 class Abbr(BaseTag): ...
@@ -123,7 +135,7 @@ class Abbr(BaseTag): ...
 class Address(BaseTag): ...
 
 
-class Area(BaseTag): ...
+class Area(BaseTag, self_closing=True): ...
 
 
 class Article(BaseTag): ...
@@ -135,10 +147,10 @@ class Aside(BaseTag): ...
 class Audio(BaseTag): ...
 
 
-class B(BaseTag): ...
+class HtmlTagB(BaseTag): ...
 
 
-class Base(BaseTag): ...
+class Base(BaseTag, self_closing=True): ...
 
 
 class Bdi(BaseTag): ...
@@ -153,7 +165,7 @@ class Blockquote(BaseTag): ...
 class Body(BaseTag): ...
 
 
-class Br(BaseTag): ...
+class Br(BaseTag, self_closing=True): ...
 
 
 class Button(BaseTag): ...
@@ -171,7 +183,7 @@ class Cite(BaseTag): ...
 class Code(BaseTag): ...
 
 
-class Col(BaseTag): ...
+class Col(BaseTag, self_closing=True): ...
 
 
 class Colgroup(BaseTag): ...
@@ -210,7 +222,7 @@ class Dt(BaseTag): ...
 class Em(BaseTag): ...
 
 
-class Embed(BaseTag): ...
+class Embed(BaseTag, self_closing=True): ...
 
 
 class Fencedframe(BaseTag): ...
@@ -243,22 +255,22 @@ class Header(BaseTag): ...
 class Hgroup(BaseTag): ...
 
 
-class Hr(BaseTag): ...
+class Hr(BaseTag, self_closing=True): ...
 
 
 class Html(BaseTag): ...
 
 
-class I(BaseTag): ...
+class HtmlTagI(BaseTag): ...
 
 
 class Iframe(BaseTag): ...
 
 
-class Img(BaseTag): ...
+class Img(BaseTag, self_closing=True): ...
 
 
-class Input(BaseTag): ...
+class Input(BaseTag, self_closing=True): ...
 
 
 class Ins(BaseTag): ...
@@ -276,7 +288,7 @@ class Legend(BaseTag): ...
 class Li(BaseTag): ...
 
 
-class Link(BaseTag): ...
+class Link(BaseTag, self_closing=True): ...
 
 
 class Main(BaseTag): ...
@@ -291,7 +303,7 @@ class Mark(BaseTag): ...
 class Menu(BaseTag): ...
 
 
-class Meta(BaseTag): ...
+class Meta(BaseTag, self_closing=True): ...
 
 
 class Meter(BaseTag): ...
@@ -318,7 +330,7 @@ class Option(BaseTag): ...
 class Output(BaseTag): ...
 
 
-class P(BaseTag): ...
+class HtmlTagP(BaseTag): ...
 
 
 class Picture(BaseTag): ...
@@ -333,7 +345,7 @@ class Pre(BaseTag): ...
 class Progress(BaseTag): ...
 
 
-class Q(BaseTag): ...
+class HtmlTagQ(BaseTag): ...
 
 
 class Rp(BaseTag): ...
@@ -345,7 +357,7 @@ class Rt(BaseTag): ...
 class Ruby(BaseTag): ...
 
 
-class S(BaseTag): ...
+class HtmlTagS(BaseTag): ...
 
 
 class Samp(BaseTag): ...
@@ -369,7 +381,7 @@ class Slot(BaseTag): ...
 class Small(BaseTag): ...
 
 
-class Source(BaseTag): ...
+class Source(BaseTag, self_closing=True): ...
 
 
 class Span(BaseTag): ...
@@ -423,10 +435,10 @@ class Title(BaseTag): ...
 class Tr(BaseTag): ...
 
 
-class Track(BaseTag): ...
+class Track(BaseTag, self_closing=True): ...
 
 
-class U(BaseTag): ...
+class HtmlTagU(BaseTag): ...
 
 
 class Ul(BaseTag): ...
@@ -438,4 +450,124 @@ class Var(BaseTag): ...
 class Video(BaseTag): ...
 
 
-class Wbr(BaseTag): ...
+class Wbr(BaseTag, self_closing=True): ...
+
+
+A = HtmlTagA
+B = HtmlTagB
+I = HtmlTagI  # noqa
+P = HtmlTagP
+Q = HtmlTagQ
+S = HtmlTagS
+U = HtmlTagU
+
+__all__ = (
+    "A",
+    "Abbr",
+    "Address",
+    "Area",
+    "Article",
+    "Aside",
+    "Audio",
+    "B",
+    "Base",
+    "Bdi",
+    "Bdo",
+    "Blockquote",
+    "Body",
+    "Br",
+    "Button",
+    "Canvas",
+    "Caption",
+    "Cite",
+    "Code",
+    "Col",
+    "Colgroup",
+    "Data",
+    "Datalist",
+    "Dd",
+    "Del",
+    "Details",
+    "Dfn",
+    "Dialog",
+    "Div",
+    "Dl",
+    "Dt",
+    "Em",
+    "Embed",
+    "Fencedframe",
+    "Fieldset",
+    "Figcaption",
+    "Figure",
+    "Footer",
+    "Form",
+    "H1",
+    "Head",
+    "Header",
+    "Hgroup",
+    "Hr",
+    "Html",
+    "I",
+    "Iframe",
+    "Img",
+    "Input",
+    "Ins",
+    "Kbd",
+    "Label",
+    "Legend",
+    "Li",
+    "Link",
+    "Main",
+    "Map",
+    "Mark",
+    "Menu",
+    "Meta",
+    "Meter",
+    "Nav",
+    "Noscript",
+    "Object",
+    "Ol",
+    "Optgroup",
+    "Option",
+    "Output",
+    "P",
+    "Picture",
+    "PortalExperimental",
+    "Pre",
+    "Progress",
+    "Q",
+    "Rp",
+    "Ruby",
+    "S",
+    "Samp",
+    "Script",
+    "Search",
+    "Section",
+    "Select",
+    "Slot",
+    "Small",
+    "Source",
+    "Span",
+    "Strong",
+    "Style",
+    "Sub",
+    "Summary",
+    "Sup",
+    "Table",
+    "Tbody",
+    "Td",
+    "Template",
+    "Textarea",
+    "Tfoot",
+    "Th",
+    "Thead",
+    "Time",
+    "Title",
+    "Tr",
+    "Track",
+    "U",
+    "Ul",
+    "Var",
+    "Video",
+    "Wbr",
+)

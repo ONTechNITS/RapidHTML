@@ -4,6 +4,7 @@ from functools import lru_cache
 
 from starlette.applications import Starlette
 
+
 @lru_cache
 def get_app() -> "Starlette":
     """Returns the current Starlette application instance.

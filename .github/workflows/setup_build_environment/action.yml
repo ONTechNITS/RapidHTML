@@ -1,0 +1,50 @@
+name: Setup QuickHTML Build environment
+description: |
+  This composite action sets up the initial build environment steps for a CI action
+
+inputs:
+  python_version:
+    description: The version of Python to use for the build
+    required: true
+  poetry_version:
+    description: The version of python-poetry to use for the build
+    required: false
+    default: 1.8.3
+  install_dev_dependencies:
+    description: Indicate if dev group dependencies should be installed
+    required: false
+    default: 'true'
+  enable_dependency_cache:
+    description: Indicate if the dependencies should be cached to speed up subsequent builds
+    required: false
+    default: 'true'
+
+runs:
+  using: composite
+
+  steps:    
+    - name: Set up Python
+      id: setup_python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python_version }}
+    
+    - name: Setup Poetry
+      uses: snok/install-poetry@v1
+      with:
+        version: ${{ inputs.poetry_version }}
+        virtualenvs-create: true
+        virtualenvs-in-project: true
+        virtualenvs-path: .venv
+        installer-parallel: true
+    
+    - name: Load cached venv
+      if: inputs.enable_dependency_cache == 'true'
+      uses: actions/cache@v4
+      with:
+        path: .venv
+        key: quickhtml-poetry-venv-${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+    
+    - name: Install Dependencies
+      shell: bash
+      run: make install DEV=${{ inputs.install_dev_dependencies == 'true' }}
