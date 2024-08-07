@@ -13,7 +13,7 @@ from quickhtml.style import StyleSheet
 )
 def test_invalid_css_str(style, expected_error):
     with pytest.raises(expected_error):
-        StyleSheet.from_css(style).render()
+        StyleSheet.from_style(style).render()
 
 
 def test_from_css_dict():
@@ -24,13 +24,14 @@ def test_from_css_dict():
     color: red;
     width: 25 px;
 }
+
 """
     )
 
 
 def test_css_combination():
-    red = StyleSheet.from_css("color: red;")
-    bold = StyleSheet.from_css("font-weight: bold;")
+    red = StyleSheet.from_style("color: red;")
+    bold = StyleSheet.from_style("font-weight: bold;")
     red_bold = red + bold
 
     bolded_ul = StyleSheet(ul=red_bold)
@@ -40,6 +41,7 @@ def test_css_combination():
     color: red;
     font-weight: bold;
 }
+
 """
     )
 
@@ -58,6 +60,7 @@ def test_css_nested():
         """div a:hover {
     font-weight: bold;
 }
+
 """
     )
 
@@ -73,10 +76,10 @@ def test_with_callable():
         )
 
     site_background = "#123450"
-    red = StyleSheet.from_css("color: red;")
+    red = StyleSheet.from_style("color: red;")
     blue = StyleSheet(color="blue")
     green = StyleSheet(**{"color": "green"})
-    bold = StyleSheet.from_css("font-weight: bold;")
+    bold = StyleSheet.from_style("font-weight: bold;")
     red_bold = red + bold
 
     my_style = {
@@ -107,9 +110,11 @@ def test_with_callable():
         """.blue {
     color: blue;
 }
+
 .green {
     color: green;
 }
+
 ul li {
     border-radius: 3 px;
     -moz-border-radius: 4 px;
@@ -118,6 +123,7 @@ ul li {
     font-style: italic;
     background: #123450;
 }
+
 div.ground {
     border-radius: 7 px;
     -moz-border-radius: 10 px;
@@ -125,16 +131,20 @@ div.ground {
     color: red;
     font-weight: bold;
 }
+
 div.ground p {
     text-align: left;
 }
+
 div.ground p em {
     font-size: 14pt;
     background: #123450;
 }
+
 #my-id {
     color: red;
     font-weight: bold;
 }
+
 """
     )
