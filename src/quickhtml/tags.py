@@ -111,6 +111,10 @@ class BaseTag:
             # Translate value None to 'none'
             if value is None:
                 value = "none"
+                
+            if value is True:
+                ret_html += f"{key} "
+                continue
 
             # Replace underscores with hyphens
             key = key.replace("_", "-")
