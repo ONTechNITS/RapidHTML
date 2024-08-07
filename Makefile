@@ -48,4 +48,4 @@ lint:
 .PHONY:docs_serve
 docs_serve:
 	@echo "Serving docs"
-	@sphinx-autobuild --port 0 docs docs/_build
+	@$(POETRY_BIN) run sphinx-autobuild --port 0 docs docs/_build
