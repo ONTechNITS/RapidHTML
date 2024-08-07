@@ -60,14 +60,14 @@ class StyleSheet:
     def render(self, *, _nodes=None, _parent="", indent=4) -> str:
         """Given a dict mapping CSS selectors to a dict of styles, generate a
         list of lines of CSS output.
-        
+
         Args:
             nodes (dist[str, str], optional): CSS selectors to render. If left empty, will use self.nodes. Defaults to None.
             _parent (str, optional): Used for recursive rendering. Defaults to "".
             _indent (int, optional): Used for recursive rendering. Defaults to 4.
-                   
+
             Example:
-            .. code-block:: python 
+            .. code-block:: python
                    css = StyleSheet(
                        body={
                            "font-size": "16px",
@@ -91,7 +91,7 @@ class StyleSheet:
             Raises:
                 TypeError: Raised if the value of a node is not a `dict`, `StyleSheet`, `str`, `int`, or `float`.
                 ValueError: Raised if invalid CSS is provided.
-            
+
             Returns:
                 str: The rendered CSS document.
         """
