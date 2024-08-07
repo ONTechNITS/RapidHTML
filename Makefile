@@ -44,3 +44,7 @@ endif
 .PHONY:lint
 lint:
 	@$(POETRY_BIN) run ruff check
+
+.PHONY:test
+test:
+	@$(POETRY_BIN) run pytest

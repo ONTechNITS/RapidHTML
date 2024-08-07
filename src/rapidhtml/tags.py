@@ -5,6 +5,7 @@ import typing
 
 from collections.abc import Iterable
 
+from rapidhtml.style import StyleSheet
 from rapidhtml.utils import get_app
 
 if typing.TYPE_CHECKING:
@@ -109,12 +110,11 @@ class BaseTag:
             ret_html += f"{key}='{value}' "
 
         if not self.__self_closing:
-            ret_html = ret_html.rstrip()
-            ret_html += ">"
+            ret_html = ret_html.rstrip() + ">"  # Take out trailing spaces
 
         # Recursively render child tags
         for tag in self.tags:
-            if isinstance(tag, BaseTag):
+            if isinstance(tag, (BaseTag, StyleSheet)):
                 ret_html += tag.render()
             elif hasattr(tag, "__str__"):
                 ret_html += html.escape(str(tag))
