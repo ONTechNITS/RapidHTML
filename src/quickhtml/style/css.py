@@ -15,9 +15,11 @@ class Style:
         if isinstance(css, str):
             k_v = {}
             for statement in css.split(";"):
-                assert statement.count(":") == 1, f"Invalid CSS string {css}"
+                if not statement:
+                    continue
+                assert statement.count(":") == 1, f"Invalid CSS string '{css}'"
 
-                k, v = css.split(":")
+                k, v = map(lambda x: x.strip(" :;\n"), css.split(":"))
                 k_v[k] = v
 
             return cls(**k_v)
@@ -71,7 +73,7 @@ class Style:
                 else:
                     # everything else (int or float, likely)
                     value = f"{str(stylenode[1])} px"
-                ret_css += f"{' ' * indent} {attribute}: {value};\n"
+                ret_css += f"{' ' * indent}{attribute}: {value};\n"
             ret_css += "}\n"
 
         for subnode in subnodes:

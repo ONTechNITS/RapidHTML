@@ -1,0 +1,23 @@
+name: Run Unit Tests
+
+on:
+  pull_request: null
+  push:
+    branches:
+      - main
+
+jobs:
+  run_unit_tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Build Environment
+        uses: ./.github/workflows/setup_build_environment
+        with:
+          python_version: '3.8'
+      
+      - name: Run Pytest
+        run: make test
