@@ -1,7 +1,7 @@
 from starlette.testclient import TestClient
 
-from quickhtml import QuickHTML
-from quickhtml.tags import Html, H1, Body, Title
+from rapidhtml import RapidHTML
+from rapidhtml.tags import Html, H1, Body, Title
 
 
 def test_render():
@@ -69,7 +69,7 @@ def test_tag_callback():
     async def callback():
         return "Callback"
 
-    test_app = QuickHTML()
+    test_app = RapidHTML()
 
     test_html = Html(callback=callback)
     assert test_html.attrs["hx-get"] == "/python-callbacks/{}".format(id(callback))
