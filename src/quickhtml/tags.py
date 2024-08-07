@@ -6,6 +6,7 @@ import typing
 from collections.abc import Iterable
 
 from quickhtml.utils import get_app
+from quickhtml.style import StyleSheet
 
 if typing.TYPE_CHECKING:
     from quickhtml import QuickHTML
@@ -113,7 +114,7 @@ class BaseTag:
 
         # Recursively render child tags
         for tag in self.tags:
-            if isinstance(tag, BaseTag):
+            if isinstance(tag, (BaseTag, StyleSheet)):
                 ret_html += tag.render()
             elif hasattr(tag, "__str__"):
                 ret_html += html.escape(str(tag))

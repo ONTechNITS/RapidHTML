@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Any, Generator, Union
 
 
-class Style:
+class StyleSheet:
     def __init__(self, **styles):
         self.__style_rules = styles
 
@@ -26,15 +26,15 @@ class Style:
         elif isinstance(css, dict):
             return cls(**css)
 
-    def __add__(self, other: Union[dict, "Style"]) -> "Style":
+    def __add__(self, other: Union[dict, "StyleSheet"]) -> "StyleSheet":
         current_rules = self.rules
 
-        if isinstance(other, Style):
+        if isinstance(other, StyleSheet):
             other_rules = other.rules
         elif isinstance(other, dict):
             other_rules = other
 
-        return Style(**{**current_rules, **other_rules})
+        return StyleSheet(**{**current_rules, **other_rules})
 
     def items(self) -> Generator[tuple[str, Any], None, None]:
         for name, value in self.rules.items():
@@ -50,7 +50,7 @@ class Style:
 
         for name, value in current_nodes.items():
             # If the sub node is a nested style, we need to render it
-            if isinstance(value, (dict, Style)):
+            if isinstance(value, (dict, StyleSheet)):
                 subnodes.append((name, value))
 
             # Else, it's a string, and thus, a single style element
@@ -82,56 +82,3 @@ class Style:
             )
 
         return ret_css
-
-
-if __name__ == "__main__":
-    # c = {
-    #     'a:hover': {
-    #         'font-weight': 'bold',
-    #     }
-    # }
-    # r = Style(**c).render()
-    # print(r)
-
-    site_background = "#123450"
-    red = Style.from_css("color: red;")
-    blue = Style(color="blue")
-    green = Style(**{"color": "green"})
-    bold = Style.from_css("font-weight: bold;")
-    red_bold = red + bold
-
-    def rounded(radius):
-        return Style(
-            **{
-                "border-radius": radius,
-                "-moz-border-radius": int(round(radius * 1.5)),
-                "-webkit-border-radius": int(round(radius * 2.0)),
-            }
-        )
-
-    c2 = Style(
-        **{
-            ".blue": blue,
-            ".green": green,
-            "ul li": rounded(3)
-            + blue
-            + {
-                "font-style": "italic",
-                "background": site_background,
-            },
-            "div.ground": rounded(7)
-            + red_bold
-            + {
-                "p": {
-                    "text-align": "left",
-                    "em": {
-                        "font-size": "14pt",
-                        "background": site_background,
-                    },
-                },
-            },
-            "#my-id": green + red_bold,
-        }
-    )
-
-    print(c2.render())
