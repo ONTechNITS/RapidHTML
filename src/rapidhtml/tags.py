@@ -109,6 +109,7 @@ class BaseTag:
             ret_html += f"{key}='{value}' "
 
         if not self.__self_closing:
+            ret_html = ret_html.rstrip()
             ret_html += ">"
 
         # Recursively render child tags
