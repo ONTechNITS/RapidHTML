@@ -5,10 +5,10 @@ import typing
 
 from collections.abc import Iterable
 
-from quickhtml.utils import get_app
+from rapidhtml.utils import get_app
 
 if typing.TYPE_CHECKING:
-    from quickhtml import QuickHTML
+    from rapidhtml import RapidHTML
     from starlette.applications import Starlette
 
 
@@ -50,12 +50,12 @@ class BaseTag:
         cls.__self_closing = self_closing
 
     @property
-    def app(self) -> "QuickHTML" | "Starlette":
+    def app(self) -> "RapidHTML" | "Starlette":
         """
-        Returns the current QuickHTML application instance.
+        Returns the current RapidHTML application instance.
 
         Returns:
-            QuickHTML | Starlette: The current QuickHTML application instance.
+            RapidHTML | Starlette: The current RapidHTML application instance.
         """
         return get_app()
 
@@ -109,6 +109,7 @@ class BaseTag:
             ret_html += f"{key}='{value}' "
 
         if not self.__self_closing:
+            ret_html = ret_html.rstrip()
             ret_html += ">"
 
         # Recursively render child tags

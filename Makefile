@@ -11,8 +11,8 @@ DEV ?= true
 help:
 	@echo "Available targets:"
 	@echo "  install    Install dependencies"
-	@echo "  format     Format all code within src/quickhtml"
-	@echo "  lint       Link all code within src/quickhtml"
+	@echo "  format     Format all code within src/rapidhtml"
+	@echo "  lint       Link all code within src/rapidhtml"
 	@echo "  lock       Update the poetry lock file"
 
 .PHONY:install-dev
@@ -40,7 +40,7 @@ ifeq ($(CHECK),true)
 else
 	@$(POETRY_BIN) run ruff format
 endif
-    
+
 .PHONY:lint
 lint:
 	@$(POETRY_BIN) run ruff check
