@@ -1,6 +1,6 @@
 import pytest
 
-from quickhtml.style import StyleSheet
+from rapidhtml.style import StyleSheet
 
 
 @pytest.mark.parametrize(

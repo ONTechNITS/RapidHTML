@@ -5,12 +5,8 @@ import typing
 
 from collections.abc import Iterable
 
-<<<<<<< HEAD:src/quickhtml/tags.py
-from quickhtml.utils import get_app
-from quickhtml.style import StyleSheet
-=======
+from rapidhtml.style import StyleSheet
 from rapidhtml.utils import get_app
->>>>>>> ab8e8f1610b4fbbffecec635714c54be41a33a8a:src/rapidhtml/tags.py
 
 if typing.TYPE_CHECKING:
     from rapidhtml import RapidHTML
@@ -114,12 +110,7 @@ class BaseTag:
             ret_html += f"{key}='{value}' "
 
         if not self.__self_closing:
-<<<<<<< HEAD:src/quickhtml/tags.py
             ret_html = ret_html.rstrip() + ">"  # Take out trailing spaces
-=======
-            ret_html = ret_html.rstrip()
-            ret_html += ">"
->>>>>>> ab8e8f1610b4fbbffecec635714c54be41a33a8a:src/rapidhtml/tags.py
 
         # Recursively render child tags
         for tag in self.tags:
