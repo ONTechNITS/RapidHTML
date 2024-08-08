@@ -8,36 +8,36 @@ from dataclasses import dataclass
 @dataclass
 class RapidHTMLCallback:
     """
-    A class to represent a callback function. Abstracts away most of the 
+    A class to represent a callback function. Abstracts away most of the
     HTMX attributes and provides a more Pythonic interface.
 
 
     Attributes:
-    
+
         func (Callable): The callback function.
-        
+
         method (Optional[Literal["get", "post", "delete", "patch", "put"]]): The
             HTTP method to use for the callback.
-            
-        on (Optional[tuple[str, str]]): Handle events with inline scripts on 
+
+        on (Optional[tuple[str, str]]): Handle events with inline scripts on
             elements
-            
+
         push_url (Optional[str]): Push a URL into the browser location bar to
             create history.
-            
+
         select (Optional[str]): Select content to swap in from a response.
-        
+
         select_oob (Optional[str]): Select content to swap in from a response,
             somewhere other than the target (out of band).
-            
+
         swap (Optional[Literal["innerHTML", "outerHTML", "textContent",
             "beforebegin", "afterbegin", "beforeend", "afterend", "delete",
             "none"]]): Controls how content will swap in.
-            
+
         swap_oob (Optional[Literal["innerHTML", "outerHTML", "textContent",
             "beforebegin", "afterbegin", "beforeend", "afterend", "delete",
             "none"]]): Mark element to swap in from a response (out of band).
-            
+
         target (Optional[str]): Specifies the target element to be swapped.
 
         trigger (Optional[str]): Specifies the event that triggers the request.
@@ -50,42 +50,42 @@ class RapidHTMLCallback:
 
         disable (Optional[bool]): Disables htmx processing for the given node and
             any children nodes.
-            
+
         disabled_elt (Optional[str]): Adds the disabled attribute to the specified
             elements while a request is in flight.
-            
+
         disinherit (Optional[str]): Control and disable automatic attribute
             inheritance for child nodes.
-            
+
         encoding (Optional[str]): Changes the request encoding type.
-        
+
         ext (Optional[str]): Extensions to use for this element.
-        
+
         headers (Optional[dict]): Adds to the headers that will be submitted with
             the request.
-            
+
         history (Optional[bool]): Prevent sensitive data being saved to the history
             cache.
-            
+
         history_elt (Optional[bool]): The element to snapshot and restore during
             history navigation.
-            
+
         include (Optional[str]): Include additional data in requests.
-        
+
         indicator (Optional[str]): The element to put the htmx-request class on
             during the request.
-            
+
         inherit (Optional[str]): Control and enable automatic attribute inheritance
             for child nodes if it has been disabled by default.
-            
+
         params (Optional[str]): Filters the parameters that will be submitted with
             a request.
-            
+
         preserve (Optional[bool]): Specifies elements to keep unchanged between
             requests.
-            
+
         prompt (Optional[str]): Shows a prompt() before submitting a request.
-        
+
         replace_url (Optional[str]): Replace the URL in the browser location bar.
 
         request (Optional[str | dict]): Configures various aspects of the request.
@@ -93,15 +93,16 @@ class RapidHTMLCallback:
         sync (Optional[Literal["drop", "abort", "replace", "queue", "queue first",
             "queue last", "queue all"]]): Control how requests made by different
             elements are synchronized.
-            
+
         validate (Optional[bool]): Force elements to validate themselves before a
             request.
-        
+
     More information on the HTMX attributes can be found here:
         https://htmx.org/reference/
-    
+
 
     """
+
     func: Callable
     method: Optional[Literal["get", "post", "delete", "patch", "put"]] = "get"
     on: Optional[tuple[str, str]] = None
@@ -172,7 +173,7 @@ class RapidHTMLCallback:
         """Get the data of the callback.
 
         Returns:
-            tuple[Callable, str, dict]: The function, method, and attributes of 
+            tuple[Callable, str, dict]: The function, method, and attributes of
             the callback.
         """
         attrs = {}

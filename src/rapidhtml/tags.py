@@ -77,11 +77,7 @@ class BaseTag:
 
         self.callback_route = f"/python-callbacks/{id(callback)}"
 
-        self.app.add_route(
-            self.callback_route,
-            callback,
-            [method]
-        )
+        self.app.add_route(self.callback_route, callback, [method])
 
         self.attrs[f"hx-{method}"] = self.callback_route
 
@@ -113,7 +109,7 @@ class BaseTag:
             # Translate value None to 'none'
             if value is None:
                 value = "none"
-                
+
             if value is True:
                 ret_html += f"{key} "
                 continue
