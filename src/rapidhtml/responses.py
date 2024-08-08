@@ -4,12 +4,12 @@ import typing
 
 from starlette.responses import Response
 
-from quickhtml.tags import BaseTag
+from rapidhtml.tags import BaseTag
 
 
-class QuickHTMLResponse(Response):
+class RapidHTMLResponse(Response):
     """
-    QuickHTML Response. Renders the QuickHTML tags to HTML and sends the
+    RapidHTML Response. Renders the RapidHTML tags to HTML and sends the
     response to the client.
     """
 
@@ -17,7 +17,7 @@ class QuickHTMLResponse(Response):
 
     def render(self, content: typing.Any) -> bytes:
         """
-        Override the render method to render the QuickHTML tags to HTML.
+        Override the render method to render the RapidHTML tags to HTML.
         First check if the content is an instance of BaseTag, if so, render the
         content to HTML and encode it with the charset.
 

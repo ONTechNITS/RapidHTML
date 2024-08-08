@@ -7,13 +7,13 @@ from starlette.requests import Request
 from starlette.routing import Route, Router
 from starlette.responses import JSONResponse, PlainTextResponse, Response
 
-from quickhtml.tags import BaseTag
-from quickhtml.responses import QuickHTMLResponse
+from rapidhtml.tags import BaseTag
+from rapidhtml.responses import RapidHTMLResponse
 
 
-class QuickHTMLRoute(Route):
+class RapidHTMLRoute(Route):
     """
-    QuickHTML Route. Extends the Starlette Route to include an endpoint
+    RapidHTML Route. Extends the Starlette Route to include an endpoint
     override that will render the response to HTML if the response is an
     instance of BaseTag. If the response is a dict, it will be converted to a
     JSONResponse. If the response is a string, it will be converted to a
@@ -45,7 +45,7 @@ class QuickHTMLRoute(Route):
         # Handle different response types
         if isinstance(response, BaseTag):
             response.add_head(self.html_head)
-            response = QuickHTMLResponse(response)
+            response = RapidHTMLResponse(response)
         elif isinstance(response, dict):
             response = JSONResponse(response)
         elif isinstance(response, str):
@@ -55,9 +55,9 @@ class QuickHTMLRoute(Route):
         return response
 
 
-class QuickHTMLRouter(Router):
+class RapidHTMLRouter(Router):
     """
-    A custom router class for handling QuickHTML routes.
+    A custom router class for handling RapidHTML routes.
 
     Args:
         *args: Variable length argument list.
@@ -104,7 +104,7 @@ class QuickHTMLRouter(Router):
         Returns:
             None: This method does not return anything.
         """
-        route = QuickHTMLRoute(
+        route = RapidHTMLRoute(
             path,
             html_head=self.html_head,
             endpoint=endpoint,

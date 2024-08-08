@@ -1,13 +1,13 @@
-name: Validate Lint
+name: Run Unit Tests
 
 on:
   pull_request: null
   push:
     branches:
-      - main
+      - master
 
 jobs:
-  validate_lint:
+  run_unit_tests:
     runs-on: ubuntu-latest
     
     steps:
@@ -17,7 +17,7 @@ jobs:
       - name: Setup Build Environment
         uses: ./.github/workflows/setup_build_environment
         with:
-          python_version: '3.9'
+          python_version: '3.8'
       
-      - name: Check Poetry lockfile
-        run: make lint
+      - name: Run Pytest
+        run: make test

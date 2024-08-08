@@ -1,14 +1,14 @@
-# QuickHTML
+# RapidHTML
 
 A project for developing web apps totally in Python
 
 ## Example
 
 ```py
-from quickhtml import QuickHTML
-from quickhtml.tags import *
+from rapidhtml import RapidHTML
+from rapidhtml.tags import *
 
-app = QuickHTML(
+app = RapidHTML(
     html_head=[Link(rel="stylesheet", href="https://matcha.mizu.sh/matcha.css")]
 )
 
@@ -20,12 +20,12 @@ async def homepage(request):
                 Button('Click me', id='button', hx_get='/data'),
             )
         )
-    
+
 @app.route('/data')
 async def data(request):
     return "Clicked!"
 
-app.serve(port=8001)
+app.serve()
 ```
 
 This will serve the app at http://localhost:8000
