@@ -131,9 +131,6 @@ class RapidHTMLRouter(Router):
         Args:
             routes (list[tuple[str, typing.Callable[[Request], typing.Awaitable[Response] | Response]]]):
                 A list of tuples containing the URL path pattern and the endpoint function.
-
-        Returns:
-            None: This method does not return anything.
         """
         for path, endpoint in routes:
             self.add_route(path, endpoint)
@@ -151,9 +148,6 @@ class RapidHTMLRouter(Router):
             path (str): The URL path pattern for the WebSocket route.
             endpoint (typing.Callable[[WebSocket], typing.Awaitable[None]]): The function or coroutine that handles the WebSocket route.
             name (str | None, optional): The name of the WebSocket route. Defaults to None.
-
-        Returns:
-            None: This method does not return anything.
         """
         route = QuickHTMLWSRoute(path, endpoint=endpoint, name=name)
 
@@ -169,9 +163,6 @@ class RapidHTMLRouter(Router):
         Args:
             routes (list[tuple[str, typing.Callable[[WebSocket], typing.Awaitable[None]]]]):
                 A list of tuples containing the URL path pattern and the endpoint function.
-
-        Returns:
-            None: This method does not return anything.
         """
         for path, endpoint in routes:
             self.add_websocket_route(path, endpoint)
