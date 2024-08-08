@@ -45,6 +45,16 @@ endif
 lint:
 	@$(POETRY_BIN) run ruff check
 
+.PHONY:docs-serve
+docs-serve:
+	@echo "Serving docs"
+	@$(POETRY_BIN) run sphinx-autobuild --port 0 docs docs/_build
+
+.PHONY:docs-build
+docs-build:
+	@echo "Building docs"
+	@$(POETRY_BIN) run sphinx-build docs docs/_build
+	
 .PHONY:test
 test:
 	@$(POETRY_BIN) run pytest
