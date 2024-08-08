@@ -23,6 +23,9 @@ clicked:
 
     app = RapidHTML()
 
+    async def update_time(request):
+        return datetime.datetime.now().strftime("%H:%M:%S")
+
     @app.route("/")
     async def homepage(request):
         return Html(
@@ -33,9 +36,6 @@ clicked:
                     P(id="time"),
                 )
             )
-
-    async def update_time(request):
-        return datetime.datetime.now().strftime("%H:%M:%S")
 
     app.serve()
 
@@ -69,6 +69,7 @@ define a callback function for a button that updates the page with the current t
 when clicked:
 
 .. code-block:: python
+    :emphasize-lines: 5, 15-19, 24
 
     import datetime
     from rapidhtml import RapidHTML
@@ -77,6 +78,9 @@ when clicked:
     from rapidhtml.callbacks import RapidHTMLCallback
 
     app = RapidHTML()
+
+    async def update_time(request):
+        return datetime.datetime.now().strftime("%H:%M:%S")
 
     @app.route("/")
     async def homepage(request):
@@ -94,9 +98,6 @@ when clicked:
                     P(id="time"),
                 )
             )
-
-    async def update_time(request):
-        return datetime.datetime.now().strftime("%H:%M:%S")
 
     app.serve()
 
