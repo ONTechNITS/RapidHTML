@@ -25,7 +25,7 @@ async def homepage(request):
 async def data(request):
     return "Clicked!"
 
-app.serve(port=8001)
+app.serve()
 ```
 
 This will serve the app at http://localhost:8000

@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'QuickHTML'
+project = 'RapidHTML'
 copyright = '2024, Thomas Ryan, Moses Cordeiro, Rashid N H M'
 author = 'Thomas Ryan, Moses Cordeiro, Rashid N H M'
 release = '0.1.0'

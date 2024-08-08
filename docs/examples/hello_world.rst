@@ -1,17 +1,17 @@
 Hello World 
 ===========
 
-The simplest example of a QuickHTML application is a simple "Hello, world!" page.
-This example demonstrates how to create a basic QuickHTML application that serves 
+The simplest example of a RapidHTML application is a simple "Hello, world!" page.
+This example demonstrates how to create a basic RapidHTML application that serves 
 a single page with a button that, when clicked, sends an AJAX request to the 
 server and updates the page with the response.
 
 .. code-block:: python
 
-    from quickhtml import QuickHTML
-    from quickhtml.tags import *
+    from rapidhtml import RapidHTML
+    from rapidhtml.tags import *
 
-    app = QuickHTML()
+    app = RapidHTML()
 
     @app.route('/')
     async def homepage(request):

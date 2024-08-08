@@ -1,37 +1,37 @@
 Getting Started
 ===============
 
-Welcome to the Getting Started guide for the `QuickHTML` project! This guide will
-walk you through the process of creating a simple QuickHTML application.
+Welcome to the Getting Started guide for the `RapidHTML` project! This guide will
+walk you through the process of creating a simple RapidHTML application.
 
 Installation
 ------------
-To install QuickHTML, you can use `pip`:
+To install RapidHTML, you can use `pip`:
 
 .. code-block:: bash
 
-    pip install quickhtml
+    pip install rapidhtml
 
-Creating a QuickHTML Application
+Creating a RapidHTML Application
 --------------------------------
 
-To create a QuickHTML application, you need to create an instance of the `QuickHTML`
+To create a RapidHTML application, you need to create an instance of the `RapidHTML`
 class and define routes using the `route` decorator. Here is an example of a simple
-QuickHTML application that serves a single page with a button that, when clicked,
+RapidHTML application that serves a single page with a button that, when clicked,
 sends an AJAX request to the server and updates the page with the response broken down into steps:
 
-1. Import the `QuickHTML` class and the `tags` module:
+1. Import the `RapidHTML` class and the `tags` module:
 
 .. code-block:: python
 
-    from quickhtml import QuickHTML
-    from quickhtml.tags import *
+    from rapidhtml import RapidHTML
+    from rapidhtml.tags import *
 
-2. Create an instance of the `QuickHTML` class:
+2. Create an instance of the `RapidHTML` class:
 
 .. code-block:: python
 
-    app = QuickHTML()
+    app = RapidHTML()
 
 3. Define a route for the homepage that returns an `Html` object with a `Div` containing
 an `H1` element and a `Button` element:
@@ -55,7 +55,7 @@ an `H1` element and a `Button` element:
     async def data(request):
         return "Clicked!"
 
-5. Start the QuickHTML application using the `serve` method:
+5. Start the RapidHTML application using the `serve` method:
 
 .. code-block:: python
 
@@ -65,10 +65,10 @@ Putting it all together
 
 .. code-block:: python
 
-    from quickhtml import QuickHTML
-    from quickhtml.tags import *
+    from rapidhtml import RapidHTML
+    from rapidhtml.tags import *
 
-    app = QuickHTML()
+    app = RapidHTML()
 
     @app.route('/')
     async def homepage(request):
@@ -92,6 +92,6 @@ when clicked.
 Next Steps
 ----------
 
-Congratulations! You have successfully created a simple QuickHTML application. To learn
-more about the features and capabilities of QuickHTML, check out the `Examples` section
+Congratulations! You have successfully created a simple RapidHTML application. To learn
+more about the features and capabilities of RapidHTML, check out the `Examples` section
 of the documentation.
