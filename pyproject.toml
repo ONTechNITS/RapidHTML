@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "quickhtml"
+name = "rapidhtml"
 version = "0.1.0"
 description = "Web framework to generate web-based applications in pure python"
 authors = [
@@ -9,7 +9,7 @@ authors = [
 ]
 readme = "README.md"
 package-mode = true
-packages = [{ include = "quickhtml", from = "src" }]
+packages = [{ include = "rapidhtml", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -32,10 +32,10 @@ sphinx = "^7.4.7"
 sphinx-autobuild = "^2024.4.16"
 
 [tool.ruff]
-include = ["src/quickhtml/*.py", "tests/*.py"]
+include = ["src/rapidhtml/*.py", "tests/*.py"]
 
 # [tool.ruff.lint.per-file-ignores]
-# "src/quickhtml/tags.py" = ["E742"]
+# "src/rapidhtml/tags.py" = ["E742"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
