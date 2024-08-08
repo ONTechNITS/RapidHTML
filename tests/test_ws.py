@@ -1,13 +1,13 @@
 from starlette.testclient import TestClient
 from starlette.websockets import WebSocket  # Added import
-from quickhtml.routing import QuickHTMLWSEndpoint
-from quickhtml import QuickHTML
+from rapidhtml.routing import RapidHTMLWSEndpoint
+from rapidhtml import RapidHTML
 
 
 def test_ws():
-    test_app = QuickHTML()
+    test_app = RapidHTML()
 
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "text"
 
         async def on_connect(self, websocket):
@@ -24,9 +24,9 @@ def test_ws():
 
 
 def test_ws_receive():
-    test_app = QuickHTML()
+    test_app = RapidHTML()
 
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "text"
 
         async def on_connect(self, websocket):
@@ -50,9 +50,9 @@ def test_ws_receive():
 
 
 def test_ws_different_encodings():
-    test_app = QuickHTML()
+    test_app = RapidHTML()
 
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "bytes"
 
         async def on_connect(self, websocket):
@@ -69,9 +69,9 @@ def test_ws_different_encodings():
 
 
 def test_ws_different_message_types():
-    test_app = QuickHTML()
+    test_app = RapidHTML()
 
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "json"
 
         async def on_connect(self, websocket):
@@ -88,10 +88,10 @@ def test_ws_different_message_types():
 
 
 def test_ws_close_code():
-    test_app = QuickHTML()
+    test_app = RapidHTML()
     close_code_received = None
 
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "text"
 
         async def on_connect(self, websocket):
@@ -112,9 +112,9 @@ def test_ws_close_code():
 
 
 def test_ws_multiple_connections():
-    test_app = QuickHTML()
+    test_app = RapidHTML()
 
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "text"
 
         async def on_connect(self, websocket):
@@ -135,10 +135,10 @@ def test_ws_multiple_connections():
 
 
 def test_ws_with_decorator():
-    app = QuickHTML()
+    app = RapidHTML()
 
     @app.websocket_route("/ws")
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "text"
 
         async def on_connect(self, websocket: WebSocket):
@@ -158,10 +158,10 @@ def test_ws_with_decorator():
 
 
 def test_ws_receive_with_decorator():
-    app = QuickHTML()
+    app = RapidHTML()
 
     @app.websocket_route("/ws")
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "text"
 
         async def on_connect(self, websocket: WebSocket):
@@ -183,10 +183,10 @@ def test_ws_receive_with_decorator():
 
 
 def test_ws_different_encodings_with_decorator():
-    app = QuickHTML()
+    app = RapidHTML()
 
     @app.websocket_route("/ws")
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "bytes"
 
         async def on_connect(self, websocket: WebSocket):
@@ -201,10 +201,10 @@ def test_ws_different_encodings_with_decorator():
 
 
 def test_ws_different_message_types_with_decorator():
-    app = QuickHTML()
+    app = RapidHTML()
 
     @app.websocket_route("/ws")
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "json"
 
         async def on_connect(self, websocket: WebSocket):
@@ -219,11 +219,11 @@ def test_ws_different_message_types_with_decorator():
 
 
 def test_ws_close_code_with_decorator():
-    app = QuickHTML()
+    app = RapidHTML()
     close_code_received = None
 
     @app.websocket_route("/ws")
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "text"
 
         async def on_connect(self, websocket: WebSocket):
@@ -242,10 +242,10 @@ def test_ws_close_code_with_decorator():
 
 
 def test_ws_multiple_connections_with_decorator():
-    app = QuickHTML()
+    app = RapidHTML()
 
     @app.websocket_route("/ws")
-    class Echo(QuickHTMLWSEndpoint):
+    class Echo(RapidHTMLWSEndpoint):
         encoding = "text"
 
         async def on_connect(self, websocket: WebSocket):

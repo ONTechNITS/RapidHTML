@@ -149,7 +149,7 @@ class RapidHTMLRouter(Router):
             endpoint (typing.Callable[[WebSocket], typing.Awaitable[None]]): The function or coroutine that handles the WebSocket route.
             name (str | None, optional): The name of the WebSocket route. Defaults to None.
         """
-        route = QuickHTMLWSRoute(path, endpoint=endpoint, name=name)
+        route = RapidHTMLWSRoute(path, endpoint=endpoint, name=name)
 
         self.routes.append(route)
 
@@ -168,18 +168,18 @@ class RapidHTMLRouter(Router):
             self.add_websocket_route(path, endpoint)
 
 
-class QuickHTMLWSRoute(WebSocketRoute):
+class RapidHTMLWSRoute(WebSocketRoute):
     """
-    QuickHTMLWSRoute. Extends the Starlette WebSocketRoute to include
+    RapidHTMLWSRoute. Extends the Starlette WebSocketRoute to include
     custom handling for WebSocket connections.
     """
 
     ...
 
 
-class QuickHTMLWSEndpoint(WebSocketEndpoint):
+class RapidHTMLWSEndpoint(WebSocketEndpoint):
     """
-    QuickHTML WebSocket Endpoint. Extends the Starlette WebSocketEndpoint to
+    RapidHTML WebSocket Endpoint. Extends the Starlette WebSocketEndpoint to
     include custom handling for WebSocket connections.
     """
 
