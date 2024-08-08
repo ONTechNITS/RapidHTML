@@ -10,3 +10,4 @@ Python script that you can run to see the output.
    :caption: Examples:
 
    examples/hello_world
+   examples/tag_callbacks

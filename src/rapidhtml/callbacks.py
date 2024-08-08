@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class QuickHTMLCallback:
+class RapidHTMLCallback:
     """
     A class to represent a callback function. Abstracts away most of the 
     HTMX attributes and provides a more Pythonic interface.

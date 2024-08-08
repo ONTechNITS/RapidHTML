@@ -5,7 +5,7 @@ import typing
 
 from collections.abc import Iterable
 
-from rapidhtml.callbacks import QuickHTMLCallback
+from rapidhtml.callbacks import RapidHTMLCallback
 from rapidhtml.style import StyleSheet
 from rapidhtml.utils import get_app
 
@@ -34,9 +34,9 @@ class BaseTag:
     """
 
     def __init__(
-        self, *tags, callback: typing.Callable | QuickHTMLCallback = None, **attrs
+        self, *tags, callback: typing.Callable | RapidHTMLCallback = None, **attrs
     ):
-        self.tag = self.__class__.__qualname__.lower()
+        self.tag = self.__class__.__qualname__.lower().replace("htmltag", "")
         self.tags = list(tags)
         self.attrs = attrs
         if callback:
@@ -63,7 +63,7 @@ class BaseTag:
         """
         return get_app()
 
-    def add_callback(self, callback: typing.Callable | QuickHTMLCallback):
+    def add_callback(self, callback: typing.Callable | RapidHTMLCallback):
         """
         Adds a callback function to the tag.
 
@@ -71,7 +71,7 @@ class BaseTag:
             callback (typing.Callable): The callback function to be added.
         """
         method = "get"
-        if isinstance(callback, QuickHTMLCallback):
+        if isinstance(callback, RapidHTMLCallback):
             callback, method, attrs = callback.get_data()
             self.attrs.update(attrs)
 
@@ -80,6 +80,7 @@ class BaseTag:
         self.app.add_route(
             self.callback_route,
             callback,
+            [method]
         )
 
         self.attrs[f"hx-{method}"] = self.callback_route
