@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "rapidhtml-modern-table"
+version = "0.0.0"
+description = "Example of a modern HTML table using rapidhtml"
+authors = [
+    "RapidHTML Team <noreply@example.com>"
+]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pydantic = "^2.8.2"
+rapidhtml = { path = "../../", develop = true }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
