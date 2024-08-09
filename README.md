@@ -12,7 +12,6 @@ app = RapidHTML(
     html_head=[Link(rel="stylesheet", href="https://matcha.mizu.sh/matcha.css")]
 )
 
-
 @app.route('/')
 async def homepage(request):
     return Html(
