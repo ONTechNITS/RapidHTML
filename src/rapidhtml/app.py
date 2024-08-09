@@ -31,3 +31,17 @@ class RapidHTML(Starlette):
 
     def serve(self, *args, **kwargs):
         uvicorn.run(self, *args, **kwargs)
+
+    def route(self, path, *args, **kwargs):
+        def decorator(cls):
+            self.router.add_route(path, cls, *args, **kwargs)
+            return cls
+
+        return decorator
+
+    def websocket_route(self, path, *args, **kwargs):
+        def decorator(cls):
+            self.router.add_websocket_route(path, cls, *args, **kwargs)
+            return cls
+
+        return decorator

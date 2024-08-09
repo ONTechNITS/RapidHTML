@@ -4,8 +4,10 @@ import typing
 import inspect
 
 from starlette.requests import Request
-from starlette.routing import Route, Router
+from starlette.routing import Route, Router, WebSocketRoute
 from starlette.responses import JSONResponse, PlainTextResponse, Response
+from starlette.websockets import WebSocket
+from starlette.endpoints import WebSocketEndpoint
 
 from rapidhtml.tags import BaseTag
 from rapidhtml.responses import RapidHTMLResponse
@@ -112,4 +114,74 @@ class RapidHTMLRouter(Router):
             name=name,
             include_in_schema=include_in_schema,
         )
+
         self.routes.append(route)
+
+    def add_routes(
+        self,
+        routes: list[
+            tuple[
+                str, typing.Callable[[Request], typing.Awaitable[Response] | Response]
+            ]
+        ],
+    ) -> None:
+        """
+        Add multiple routes to the routing table.
+
+        Args:
+            routes (list[tuple[str, typing.Callable[[Request], typing.Awaitable[Response] | Response]]]):
+                A list of tuples containing the URL path pattern and the endpoint function.
+        """
+        for path, endpoint in routes:
+            self.add_route(path, endpoint)
+
+    def add_websocket_route(
+        self,
+        path: str,
+        endpoint: typing.Callable[[WebSocket], typing.Awaitable[None]],
+        name: str | None = None,
+    ) -> None:
+        """
+        Add a WebSocket route to the routing table.
+
+        Args:
+            path (str): The URL path pattern for the WebSocket route.
+            endpoint (typing.Callable[[WebSocket], typing.Awaitable[None]]): The function or coroutine that handles the WebSocket route.
+            name (str | None, optional): The name of the WebSocket route. Defaults to None.
+        """
+        route = RapidHTMLWSRoute(path, endpoint=endpoint, name=name)
+
+        self.routes.append(route)
+
+    def add_websocket_routes(
+        self,
+        routes: list[tuple[str, typing.Callable[[WebSocket], typing.Awaitable[None]]]],
+    ) -> None:
+        """
+        Add multiple WebSocket routes to the routing table.
+
+        Args:
+            routes (list[tuple[str, typing.Callable[[WebSocket], typing.Awaitable[None]]]]):
+                A list of tuples containing the URL path pattern and the endpoint function.
+        """
+        for path, endpoint in routes:
+            self.add_websocket_route(path, endpoint)
+
+
+class RapidHTMLWSRoute(WebSocketRoute):
+    """
+    RapidHTMLWSRoute. Extends the Starlette WebSocketRoute to include
+    custom handling for WebSocket connections.
+    """
+
+    ...
+
+
+class RapidHTMLWSEndpoint(WebSocketEndpoint):
+    """
+    RapidHTML WebSocket Endpoint. Extends the Starlette WebSocketEndpoint to
+    include custom handling for WebSocket connections.
+    """
+
+    encoding: str = "text"
+    ...
