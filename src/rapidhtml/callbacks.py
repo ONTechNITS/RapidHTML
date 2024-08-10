@@ -177,67 +177,67 @@ class RapidHTMLCallback:
             the callback.
         """
         attrs = {}
-        if self.on:
+        if self.on is not None:
             event = self.on[0]
             attrs[f"hx_on:{event}"] = self.on[1]
-        if self.push_url:
+        if self.push_url is not None:
             attrs["hx_push_url"] = self.push_url
-        if self.select:
+        if self.select is not None:
             attrs["hx_select"] = self.select
-        if self.select_oob:
+        if self.select_oob is not None:
             attrs["hx_select_oob"] = self.select_oob
-        if self.swap:
+        if self.swap is not None:
             attrs["hx_swap"] = self.swap
-        if self.swap_oob:
+        if self.swap_oob is not None:
             attrs["hx_swap_oob"] = self.swap_oob
-        if self.target:
+        if self.target is not None:
             attrs["hx_target"] = self.target
-        if self.trigger:
+        if self.trigger is not None:
             attrs["hx_trigger"] = self.trigger
-        if self.vals:
+        if self.vals is not None:
             attrs["hx_vals"] = json.dump(self.vals)
-        if self.boost:
+        if self.boost is not None:
             attrs["hx_boost"] = "true" if self.boost else "false"
-        if self.confirm:
+        if self.confirm is not None:
             attrs["hx_confirm"] = self.confirm
-        if self.disable:
+        if self.disable is not None:
             attrs["hx_disable"] = self.disable
-        if self.disabled_elt:
+        if self.disabled_elt is not None:
             attrs["hx_disabled_elt"] = self.disabled_elt
-        if self.disinherit:
+        if self.disinherit is not None:
             attrs["hx_disinherit"] = self.disinherit
-        if self.encoding:
+        if self.encoding is not None:
             attrs["hx_encoding"] = self.encoding
-        if self.ext:
+        if self.ext is not None:
             attrs["hx_ext"] = self.ext
-        if self.headers:
+        if self.headers is not None:
             attrs["hx_headers"] = json.dump(self.headers)
-        if self.history:
+        if self.history is not None:
             attrs["hx_history"] = "true" if self.history else "false"
-        if self.history_elt:
+        if self.history_elt is not None:
             attrs["hx_history_elt"] = self.history_elt
-        if self.include:
+        if self.include is not None:
             attrs["hx_include"] = self.include
-        if self.indicator:
+        if self.indicator is not None:
             attrs["hx_indicator"] = self.indicator
-        if self.inherit:
+        if self.inherit is not None:
             attrs["hx_inherit"] = self.inherit
-        if self.params:
+        if self.params is not None:
             attrs["hx_params"] = self.params
-        if self.preserve:
+        if self.preserve is not None:
             attrs["hx_preserve"] = self.preserve
-        if self.prompt:
+        if self.prompt is not None:
             attrs["hx_prompt"] = self.prompt
-        if self.replace_url:
+        if self.replace_url is not None:
             attrs["hx_replace_url"] = self.replace_url
-        if self.request:
+        if self.request is not None:
             attrs["hx_request"] = (
                 self.request
                 if isinstance(self.request, str)
                 else json.dump(self.request)
             )
-        if self.sync:
+        if self.sync is not None:
             attrs["hx_sync"] = self.sync
-        if self.validate:
+        if self.validate is not None:
             attrs["hx_validate"] = "true" if self.validate else "false"
         return self.func, self.method, attrs
