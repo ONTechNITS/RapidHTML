@@ -1,4 +1,5 @@
 import inspect
+import pathlib
 
 from functools import lru_cache
 
@@ -18,3 +19,15 @@ def get_app() -> "Starlette":
         for var in frame.frame.f_locals.values():
             if isinstance(var, Starlette):
                 return var
+
+
+@lru_cache
+def get_default_favicon() -> bytes:
+    """Get the default RapidHTML favicon.
+
+    Returns:
+        bytes: The default RapidHTML favicon.
+    """
+    path = pathlib.Path(__file__).parent.parent / "static" / "RapidHTML.svg"
+    with open(path, "rb") as f:
+        return f.read()
