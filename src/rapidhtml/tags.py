@@ -20,7 +20,7 @@ class BaseTag:
 
     Args:
         *tags: Variable length arguments representing child tags.
-        callback (typing.Callable | QuickHTMLCallback): A callback function to be added to the tag.
+        callback (typing.Callable | RapidHTMLCallback): A callback function to be added to the tag.
         **attrs: Keyword arguments representing tag attributes.
 
     Attributes:
