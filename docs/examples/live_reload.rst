@@ -10,7 +10,8 @@ To enable Live Reload, you can modify the hello world example by adding the relo
     Live reloading requires the app.serve invocation to be within the main block. This is because we're using uvicorn.run() to start the server, and the reload feature in Uvicorn will not simply re-run the script when it detects a change in the code, it will re-load the file as if it were a library, which will cause the app.serve to be called again, causing a conflict. With a main block, this is avoided. In the future we hope to remove this limitation.
 
 .. code-block:: python
-
+    :emphasize-lines: 4
+    
     from rapidhtml import RapidHTML
     from rapidhtml.tags import *
 
