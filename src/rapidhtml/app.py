@@ -38,18 +38,17 @@ class RapidHTML(Starlette):
         - HTMX
     """
 
-    """
-    Initializes the RapidHTML application.
-
-        Args:
-            html_head (typing.Iterable, optional): Tags to inject into each 
-                page's <head>. Defaults to None.
-            reload (bool, optional): Enables live-reloading. Defaults to False.
-    """
-
     def __init__(
         self, *args, html_head: typing.Iterable = None, reload: bool = False, **kwargs
     ) -> None:
+        """
+        Initializes the RapidHTML application.
+
+            Args:
+                html_head (typing.Iterable, optional): Tags to inject into each
+                    page's <head>. Defaults to None.
+                reload (bool, optional): Enables live-reloading. Defaults to False.
+        """
         super().__init__(*args, **kwargs)
 
         self.reload = reload
@@ -64,7 +63,7 @@ class RapidHTML(Starlette):
         else:
             self.router = RapidHTMLRouter(html_head=self.html_head)
 
-    def serve(self, appname=None, host="127.0.0.1", port=8000, *args, **kwargs):
+    def serve(self, appname=None, *args, **kwargs):
         if "reload" in kwargs:
             warnings.warn(
                 "`reload` should be passed as an argument when initializing the app, not when serving the app.",
@@ -74,7 +73,7 @@ class RapidHTML(Starlette):
 
         caller_file = Path(inspect.currentframe().f_back.f_globals.get("__file__", ""))
         app = f"{appname or caller_file.stem}:app" if self.reload else self
-        uvicorn.run(app=app, host=host, port=port, reload=self.reload, *args, **kwargs)
+        uvicorn.run(app=app, reload=self.reload, *args, **kwargs)
 
     def route(self, path, *args, **kwargs):
         def decorator(cls):

@@ -21,12 +21,9 @@ def wait_for_reload(url, expected_json, timeout=10, interval=0.2):
 
 @pytest.fixture(scope="module")
 def uvicorn_server():
-    os.chdir(
-        os.path.dirname(__file__)
-    )  # Ensure the working directory is the tests directory
+    os.chdir(os.path.dirname(__file__))
     with open(TEST_FILE_HELLO) as f, open(SERVER_FILE, "w") as server_file:
         server_file.write(f.read())
-
     process = subprocess.Popen(["poetry", "run", "python", SERVER_FILE])
     time.sleep(2)
     yield process
@@ -36,14 +33,8 @@ def uvicorn_server():
 
 
 def test_live_reload(uvicorn_server):
-    url = "http://127.0.0.1:8005/"
-
-    # Initial check
+    url = "http://127.0.0.1:8000/"
     assert wait_for_reload(url, {"hello": "world"})
-
-    # Swap files
     with open(TEST_FILE_GOODBYE) as f, open(SERVER_FILE, "w") as server_file:
         server_file.write(f.read())
-
-    # Check for reload
     assert wait_for_reload(url, {"goodbye": "world"})

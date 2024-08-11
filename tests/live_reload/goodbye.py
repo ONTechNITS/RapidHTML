@@ -18,6 +18,5 @@ app.router.add_routes(
 
 if __name__ == "__main__":
     app.serve(
-        port=8005,
         reload_includes=[str(Path(__file__).relative_to(Path(__file__).parent))],
     )
