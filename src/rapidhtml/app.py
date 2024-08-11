@@ -64,7 +64,7 @@ class RapidHTML(Starlette):
         else:
             self.router = RapidHTMLRouter(html_head=self.html_head)
 
-    def serve(self, appname=None, host="127.0.0.1", port=8001, *args, **kwargs):
+    def serve(self, appname=None, host="127.0.0.1", port=8000, *args, **kwargs):
         if "reload" in kwargs:
             warnings.warn(
                 "`reload` should be passed as an argument when initializing the app, not when serving the app.",
