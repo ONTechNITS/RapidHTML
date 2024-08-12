@@ -1,13 +1,31 @@
 from __future__ import annotations
 
+import warnings
 import typing
-
+import inspect
 import uvicorn
 
 from starlette.applications import Starlette
+from pathlib import Path
 
 from rapidhtml.tags import Script
-from rapidhtml.routing import RapidHTMLRouter
+from rapidhtml.routing import RapidHTMLRouter, RapidHTMLWSEndpoint
+
+JS_RELOAD_SCRIPT = """
+const sock = new WebSocket(`ws://${window.location.host}/live-reload`);
+sock.onopen = () => console.log(`Connected to the RapidHTML development server!`);
+sock.onclose = () => {
+    console.log(`disconnected... reloading.`);
+    location.reload();
+};
+"""
+
+
+class _ReloadSocket(RapidHTMLWSEndpoint):
+    encoding = "text"
+
+    async def on_connect(self, websocket):
+        await websocket.accept()
 
 
 class RapidHTML(Starlette):
@@ -20,17 +38,42 @@ class RapidHTML(Starlette):
         - HTMX
     """
 
-    def __init__(self, *args, html_head: typing.Iterable = None, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        if not html_head:
-            html_head = ()
-        self.html_head = (Script(src="https://unpkg.com/htmx.org@2.0.1"),) + tuple(
-            html_head
-        )
-        self.router = RapidHTMLRouter(html_head=self.html_head)
+    def __init__(
+        self, *args, html_head: typing.Iterable = None, reload: bool = False, **kwargs
+    ) -> None:
+        """
+        Initializes the RapidHTML application.
 
-    def serve(self, *args, **kwargs):
-        uvicorn.run(self, *args, **kwargs)
+            Args:
+                html_head (typing.Iterable, optional): Tags to inject into each
+                    page's <head>. Defaults to None.
+                reload (bool, optional): Enables live-reloading. Defaults to False.
+        """
+        super().__init__(*args, **kwargs)
+
+        self.reload = reload
+        self.html_head = (Script(src="https://unpkg.com/htmx.org@2.0.1"),) + tuple(
+            html_head or ()
+        )
+
+        if reload:
+            self.html_head += (Script(JS_RELOAD_SCRIPT),)
+            self.router = RapidHTMLRouter(html_head=self.html_head)
+            self.router.add_websocket_route("/live-reload", _ReloadSocket)
+        else:
+            self.router = RapidHTMLRouter(html_head=self.html_head)
+
+    def serve(self, appname=None, *args, **kwargs):
+        if "reload" in kwargs:
+            warnings.warn(
+                "`reload` should be passed as an argument when initializing the app, not when serving the app.",
+                UserWarning,
+            )
+            self.reload = kwargs.pop("reload")
+
+        caller_file = Path(inspect.currentframe().f_back.f_globals.get("__file__", ""))
+        app = f"{appname or caller_file.stem}:app" if self.reload else self
+        uvicorn.run(app=app, reload=self.reload, *args, **kwargs)
 
     def route(self, path, *args, **kwargs):
         def decorator(cls):
