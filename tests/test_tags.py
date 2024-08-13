@@ -1,7 +1,9 @@
+import pytest
+
 from starlette.testclient import TestClient
 
 from rapidhtml import RapidHTML
-from rapidhtml.tags import Html, H1, Body, Title
+from rapidhtml.tags import Html, H1, Body, Title, BaseDataclass
 
 
 def test_render():
@@ -77,3 +79,29 @@ def test_tag_callback():
     client = TestClient(test_app)
     response = client.get(test_html.attrs["hx-get"])
     assert response.text == "Callback"
+
+
+def test_base_dataclass():
+    class Parent(BaseDataclass):
+        a: str = None
+        b: int = None
+        
+    assert Parent().__annotations__ == {"a": str, "b": int}
+    
+    class Child(Parent):
+        c: str = None
+        
+    assert Child().__annotations__ == {"a": str, "b": int, "c": str}
+    
+    child = Child(a='a', b=1, c='c')
+    assert child.a == 'a'
+    assert child.b == 1
+    assert child.c == 'c'
+    
+    child = Child()
+    assert child.a == None
+    assert child.b == None
+    assert child.c == None
+    
+    with pytest.raises(AttributeError):
+        Child(d="d")
