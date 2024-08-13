@@ -2,18 +2,53 @@ from __future__ import annotations
 
 import html
 import typing
+import inspect
 
 from collections.abc import Iterable
 
 from rapidhtml.style import StyleSheet
-from rapidhtml.utils import get_app
+from rapidhtml.utils import get_app, dataclass_transform
 
 if typing.TYPE_CHECKING:
     from rapidhtml import RapidHTML
     from starlette.applications import Starlette
 
 
-class BaseTag:
+@dataclass_transform()
+class BaseDataclass:
+    """
+    Base dataclass tranformations class. Used to typehint tags when using
+    Python3.11+
+    """
+
+    def __init_subclass__(cls, **kwargs):
+        def func(cls, *args, **kwargs):
+            # Create a new object instance
+            obj = super().__new__(cls)
+
+            # Go up the MRO tree, grabbing and update annotations as necessary
+            for c in inspect.getmro(obj.__class__):
+                if c is object:
+                    continue
+                if not hasattr(c, "__annotations__"):
+                    setattr(c, "__annotations__", {})
+                obj.__annotations__.update(c.__annotations__)
+
+            # Go through the kwargs add set their values
+            for key, value in kwargs.items():
+                if key in obj.__annotations__:
+                    setattr(obj, key, value)
+                    continue
+                raise AttributeError(f"{key} is not a defined attribute")
+
+            # Return the object
+            return obj
+
+        # Make this the __new__ method so that we can define our __init__ freely
+        cls.__new__ = func
+
+
+class BaseTag(BaseDataclass):
     """
     Represents a base HTML tag.
 
@@ -32,10 +67,35 @@ class BaseTag:
         render(): Renders the HTML representation of the tag and its child tags.
     """
 
+    # RapidHTML attributes
+    callback: typing.Callable = None
+
+    # Global attributes
+    # https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
+    accesskey: str = None
+    class_: str = None
+    contenteditable: str = None
+    data: str = None
+    dir: str = None
+    draggable: str = None
+    enterkeyhint: str = None
+    hidden: str = None
+    id: str = None
+    inert: str = None
+    inputmode: str = None
+    lang: str = None
+    popover: str = None
+    spellcheck: str = None
+    style: str = None
+    tabindex: str = None
+    title: str = None
+    translate: str = None
+
     def __init__(self, *tags, callback: typing.Callable = None, **attrs):
         self.tag = self.__class__.__qualname__.lower()
         self.tags = list(tags)
         self.attrs = attrs
+        self.callback = callback
         if callback:
             self.add_callback(callback)
 
@@ -127,7 +187,16 @@ class BaseTag:
         return ret_html
 
 
-class HtmlTagA(BaseTag): ...
+class HtmlTagA(BaseTag):
+    download: str = None
+    href: str = None
+    hreflang: str = None
+    media: str = None
+    ping: str = None
+    referrerpolicy: str = None
+    rel: str = None
+    shape: str = None
+    target: str = None
 
 
 class Abbr(BaseTag): ...
@@ -136,7 +205,17 @@ class Abbr(BaseTag): ...
 class Address(BaseTag): ...
 
 
-class Area(BaseTag, self_closing=True): ...
+class Area(BaseTag, self_closing=True):
+    alt: str = None
+    coords: str = None
+    download: str = None
+    href: str = None
+    media: str = None
+    ping: str = None
+    referrerpolicy: str = None
+    rel: str = None
+    shape: str = None
+    target: str = None
 
 
 class Article(BaseTag): ...
@@ -145,13 +224,22 @@ class Article(BaseTag): ...
 class Aside(BaseTag): ...
 
 
-class Audio(BaseTag): ...
+class Audio(BaseTag):
+    autoplay: str = None
+    controls: str = None
+    crossorigin: str = None
+    loop: str = None
+    muted: str = None
+    preload: str = None
+    src: str = None
 
 
 class HtmlTagB(BaseTag): ...
 
 
-class Base(BaseTag, self_closing=True): ...
+class Base(BaseTag, self_closing=True):
+    href: str = None
+    target: str = None
 
 
 class Bdi(BaseTag): ...
@@ -160,19 +248,34 @@ class Bdi(BaseTag): ...
 class Bdo(BaseTag): ...
 
 
-class Blockquote(BaseTag): ...
+class Blockquote(BaseTag):
+    cite: str = None
 
 
-class Body(BaseTag): ...
+class Body(BaseTag):
+    background: str = None
+    bgcolor: str = None
 
 
 class Br(BaseTag, self_closing=True): ...
 
 
-class Button(BaseTag): ...
+class Button(BaseTag):
+    disabled: str = None
+    form: str = None
+    formaction: str = None
+    formenctype: str = None
+    formmethod: str = None
+    formnovalidate: str = None
+    formtarget: str = None
+    name: str = None
+    type: str = None
+    value: str = None
 
 
-class Canvas(BaseTag): ...
+class Canvas(BaseTag):
+    height: str = None
+    width: str = None
 
 
 class Caption(BaseTag): ...
@@ -184,13 +287,18 @@ class Cite(BaseTag): ...
 class Code(BaseTag): ...
 
 
-class Col(BaseTag, self_closing=True): ...
+class Col(BaseTag, self_closing=True):
+    bgcolor: str = None
+    span: str = None
 
 
-class Colgroup(BaseTag): ...
+class Colgroup(BaseTag):
+    bgcolor: str = None
+    span: str = None
 
 
-class Data(BaseTag): ...
+class Data(BaseTag):
+    value: str = None
 
 
 class Datalist(BaseTag): ...
@@ -199,16 +307,20 @@ class Datalist(BaseTag): ...
 class Dd(BaseTag): ...
 
 
-class Del(BaseTag): ...
+class Del(BaseTag):
+    cite: str = None
+    datetime: str = None
 
 
-class Details(BaseTag): ...
+class Details(BaseTag):
+    open: str = None
 
 
 class Dfn(BaseTag): ...
 
 
-class Dialog(BaseTag): ...
+class Dialog(BaseTag):
+    open: str = None
 
 
 class Div(BaseTag): ...
@@ -223,13 +335,20 @@ class Dt(BaseTag): ...
 class Em(BaseTag): ...
 
 
-class Embed(BaseTag, self_closing=True): ...
+class Embed(BaseTag, self_closing=True):
+    height: str = None
+    src: str = None
+    type: str = None
+    width: str = None
 
 
 class Fencedframe(BaseTag): ...
 
 
-class Fieldset(BaseTag): ...
+class Fieldset(BaseTag):
+    disabled: str = None
+    form: str = None
+    name: str = None
 
 
 class Figcaption(BaseTag): ...
@@ -241,7 +360,16 @@ class Figure(BaseTag): ...
 class Footer(BaseTag): ...
 
 
-class Form(BaseTag): ...
+class Form(BaseTag):
+    accept: str = None
+    accept_charset: str = None
+    action: str = None
+    autocomplete: str = None
+    enctype: str = None
+    method: str = None
+    name: str = None
+    novalidate: str = None
+    target: str = None
 
 
 class H1(BaseTag): ...
@@ -271,7 +399,8 @@ class Header(BaseTag): ...
 class Hgroup(BaseTag): ...
 
 
-class Hr(BaseTag, self_closing=True): ...
+class Hr(BaseTag, self_closing=True):
+    color: str = None
 
 
 class Html(BaseTag): ...
@@ -280,49 +409,136 @@ class Html(BaseTag): ...
 class HtmlTagI(BaseTag): ...
 
 
-class Iframe(BaseTag): ...
+class Iframe(BaseTag):
+    allow: str = None
+    height: str = None
+    loading: str = None
+    name: str = None
+    referrerpolicy: str = None
+    sandbox: str = None
+    src: str = None
+    srcdoc: str = None
+    width: str = None
 
 
-class Img(BaseTag, self_closing=True): ...
+class Img(BaseTag, self_closing=True):
+    alt: str = None
+    border: str = None
+    crossorigin: str = None
+    decoding: str = None
+    height: str = None
+    ismap: str = None
+    loading: str = None
+    referrerpolicy: str = None
+    sizes: str = None
+    src: str = None
+    srcset: str = None
+    usemap: str = None
+    width: str = None
 
 
-class Input(BaseTag, self_closing=True): ...
+class Input(BaseTag, self_closing=True):
+    accept: str = None
+    alt: str = None
+    autocomplete: str = None
+    capture: str = None
+    checked: str = None
+    dirname: str = None
+    disabled: str = None
+    form: str = None
+    formaction: str = None
+    formenctype: str = None
+    formmethod: str = None
+    formnovalidate: str = None
+    formtarget: str = None
+    height: str = None
+    list: str = None
+    max: str = None
+    maxlength: str = None
+    minlength: str = None
+    min: str = None
+    multiple: str = None
+    name: str = None
+    pattern: str = None
+    placeholder: str = None
+    readonly: str = None
+    required: str = None
+    size: str = None
+    src: str = None
+    step: str = None
+    type: str = None
+    usemap: str = None
+    value: str = None
+    width: str = None
 
 
-class Ins(BaseTag): ...
+class Ins(BaseTag):
+    cite: str = None
+    datetime: str = None
 
 
 class Kbd(BaseTag): ...
 
 
-class Label(BaseTag): ...
+class Label(BaseTag):
+    for_: str = None
+    form: str = None
 
 
 class Legend(BaseTag): ...
 
 
-class Li(BaseTag): ...
+class Li(BaseTag):
+    value: str = None
 
 
-class Link(BaseTag, self_closing=True): ...
+class Link(BaseTag, self_closing=True):
+    as_: str = None
+    crossorigin: str = None
+    href: str = None
+    hreflang: str = None
+    integrity: str = None
+    media: str = None
+    referrerpolicy: str = None
+    rel: str = None
+    sizes: str = None
+    type: str = None
 
 
 class Main(BaseTag): ...
 
 
-class Map(BaseTag): ...
+class Map(BaseTag):
+    name: str = None
 
 
 class Mark(BaseTag): ...
 
 
-class Menu(BaseTag): ...
+class Marquee(BaseTag):
+    bgcolor: str = None
+    loop: str = None
 
 
-class Meta(BaseTag, self_closing=True): ...
+class Menu(BaseTag):
+    type: str = None
 
 
-class Meter(BaseTag): ...
+class Meta(BaseTag, self_closing=True):
+    charset: str = None
+    content: str = None
+    http_equiv: str = None
+    name: str = None
+
+
+class Meter(BaseTag):
+    form: str = None
+    high: str = None
+    low: str = None
+    max: str = None
+    min: str = None
+    optimum: str = None
+    value: str = None
 
 
 class Nav(BaseTag): ...
@@ -331,19 +547,39 @@ class Nav(BaseTag): ...
 class Noscript(BaseTag): ...
 
 
-class Object(BaseTag): ...
+class Object(BaseTag):
+    border: str = None
+    data: str = None
+    form: str = None
+    height: str = None
+    name: str = None
+    type: str = None
+    usemap: str = None
+    width: str = None
 
 
-class Ol(BaseTag): ...
+class Ol(BaseTag):
+    reversed: str = None
+    start: str = None
+    type: str = None
 
 
-class Optgroup(BaseTag): ...
+class Optgroup(BaseTag):
+    disabled: str = None
+    label: str = None
 
 
-class Option(BaseTag): ...
+class Option(BaseTag):
+    disabled: str = None
+    label: str = None
+    selected: str = None
+    value: str = None
 
 
-class Output(BaseTag): ...
+class Output(BaseTag):
+    for_: str = None
+    form: str = None
+    name: str = None
 
 
 class HtmlTagP(BaseTag): ...
@@ -358,10 +594,14 @@ class PortalExperimental(BaseTag): ...
 class Pre(BaseTag): ...
 
 
-class Progress(BaseTag): ...
+class Progress(BaseTag):
+    form: str = None
+    max: str = None
+    value: str = None
 
 
-class HtmlTagQ(BaseTag): ...
+class HtmlTagQ(BaseTag):
+    cite: str = None
 
 
 class Rp(BaseTag): ...
@@ -379,7 +619,14 @@ class HtmlTagS(BaseTag): ...
 class Samp(BaseTag): ...
 
 
-class Script(BaseTag): ...
+class Script(BaseTag):
+    async_: str = None
+    crossorigin: str = None
+    defer: str = None
+    integrity: str = None
+    referrerpolicy: str = None
+    src: str = None
+    type: str = None
 
 
 class Search(BaseTag): ...
@@ -388,7 +635,14 @@ class Search(BaseTag): ...
 class Section(BaseTag): ...
 
 
-class Select(BaseTag): ...
+class Select(BaseTag):
+    autocomplete: str = None
+    disabled: str = None
+    form: str = None
+    multiple: str = None
+    name: str = None
+    required: str = None
+    size: str = None
 
 
 class Slot(BaseTag): ...
@@ -397,7 +651,12 @@ class Slot(BaseTag): ...
 class Small(BaseTag): ...
 
 
-class Source(BaseTag, self_closing=True): ...
+class Source(BaseTag, self_closing=True):
+    media: str = None
+    sizes: str = None
+    src: str = None
+    srcset: str = None
+    type: str = None
 
 
 class Span(BaseTag): ...
@@ -406,7 +665,9 @@ class Span(BaseTag): ...
 class Strong(BaseTag): ...
 
 
-class Style(BaseTag): ...
+class Style(BaseTag):
+    media: str = None
+    type: str = None
 
 
 class Sub(BaseTag): ...
@@ -418,40 +679,77 @@ class Summary(BaseTag): ...
 class Sup(BaseTag): ...
 
 
-class Table(BaseTag): ...
+class Table(BaseTag):
+    background: str = None
+    bgcolor: str = None
+    border: str = None
 
 
-class Tbody(BaseTag): ...
+class Tbody(BaseTag):
+    bgcolor: str = None
 
 
-class Td(BaseTag): ...
+class Td(BaseTag):
+    background: str = None
+    bgcolor: str = None
+    colspan: str = None
+    headers: str = None
+    rowspan: str = None
 
 
 class Template(BaseTag): ...
 
 
-class Textarea(BaseTag): ...
+class Textarea(BaseTag):
+    autocomplete: str = None
+    cols: str = None
+    dirname: str = None
+    disabled: str = None
+    enterkeyhint: str = None
+    form: str = None
+    inputmode: str = None
+    maxlength: str = None
+    minlength: str = None
+    name: str = None
+    placeholder: str = None
+    readonly: str = None
+    required: str = None
+    rows: str = None
 
 
-class Tfoot(BaseTag): ...
+class Tfoot(BaseTag):
+    bgcolor: str = None
 
 
-class Th(BaseTag): ...
+class Th(BaseTag):
+    background: str = None
+    bgcolor: str = None
+    colspan: str = None
+    headers: str = None
+    rowspan: str = None
+    scope: str = None
 
 
 class Thead(BaseTag): ...
 
 
-class Time(BaseTag): ...
+class Time(BaseTag):
+    datetime: str = None
 
 
 class Title(BaseTag): ...
 
 
-class Tr(BaseTag): ...
+class Tr(BaseTag):
+    bgcolor: str = None
 
 
-class Track(BaseTag, self_closing=True): ...
+class Track(BaseTag, self_closing=True):
+    default: str = None
+    kind: str = None
+    label: str = None
+    src: str = None
+    srclang: str = None
 
 
 class HtmlTagU(BaseTag): ...
@@ -463,7 +761,18 @@ class Ul(BaseTag): ...
 class Var(BaseTag): ...
 
 
-class Video(BaseTag): ...
+class Video(BaseTag):
+    autoplay: str = None
+    controls: str = None
+    crossorigin: str = None
+    height: str = None
+    loop: str = None
+    muted: str = None
+    playsinline: str = None
+    poster: str = None
+    preload: str = None
+    src: str = None
+    width: str = None
 
 
 class Wbr(BaseTag, self_closing=True): ...

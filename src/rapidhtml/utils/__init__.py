@@ -2,7 +2,18 @@ import inspect
 
 from functools import lru_cache
 
+
 from starlette.applications import Starlette
+
+try:
+    from typing import dataclass_transform
+except ImportError:
+
+    def dataclass_transform(*args, **kwargs):
+        def wrapper(cls_or_fn):
+            return cls_or_fn
+
+        return wrapper
 
 
 @lru_cache
