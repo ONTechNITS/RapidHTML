@@ -15,11 +15,11 @@ app = RapidHTML(
 @app.route('/')
 async def homepage(request):
     return Html(
-            Div(
-                H1('Hello, world!'),
-                Button('Click me', id='button', hx_get='/data'),
-            )
+        Div(
+            H1('Hello, world!'),
+            Button('Click me', id='button', hx_get='/data'),
         )
+    )
 
 @app.route('/data')
 async def data(request):
