@@ -137,3 +137,6 @@ main.py
 
 # Sphinx documentation
 docs/_build/
+
+# Lockfile within examples
+examples/**/poetry.lock

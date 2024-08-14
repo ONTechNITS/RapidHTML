@@ -4,7 +4,7 @@ import html
 import inspect
 import typing
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 
 # from rapidhtml.style import StyleSheet
 from rapidhtml.utils import get_app
@@ -92,17 +92,20 @@ class BaseTag:
 
         self.attrs["hx-get"] = self.callback_route
 
-    def add_head(self, head: typing.Iterable["BaseTag"] | "BaseTag"):
+    def add_head(self, *head: "BaseTag"):
         """
         Adds a head tag to the beginning of the list of child tags.
 
         Args:
             head: The head tag to be added.
         """
-        if not isinstance(head, Iterable):
-            head = (head,)
         if head:
-            self.tags.insert(0, Head(*head))
+            existing_head = self.pop("head", None)
+            if existing_head:
+                new_head = existing_head.tags + list(head)
+            else:
+                new_head = head
+            self.tags.insert(0, Head(*new_head))
 
     def render(self):
         """
@@ -227,7 +230,7 @@ class BaseTag:
 
         """
         if default and len(default) > 1:
-            raise TypeError("pop expected at most 2 arguments, more")
+            raise TypeError("pop expected at most 2 arguments, got more")
         try:
             return self.select(tag, pop=True, first_match=True)[0]
         except KeyError:
