@@ -24,6 +24,7 @@ BOOLEAN_ATTRS = [
     "webkitdirectory",
 ]
 
+
 class BaseTag:
     """
     Represents a base HTML tag.
@@ -115,13 +116,13 @@ class BaseTag:
 
         for key, value in self.attrs.items():
             key = key.rstrip("_")
-                
+
             # Handle boolean attributes
             if key in BOOLEAN_ATTRS:
                 ret_html += f"{key} "
                 continue
-            
-            # Translate value None, True, or False to strings              
+
+            # Translate value None, True, or False to strings
             if value in (None, True, False):
                 value = str(value).lower()
 
