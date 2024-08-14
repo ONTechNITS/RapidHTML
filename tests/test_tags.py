@@ -47,7 +47,7 @@ def test_render_with_head():
         )
     )
 
-    test_html.add_head((Title("foobar"),))
+    test_html.add_head(*(Title("foobar"),))
     expected_html = (
         "<html><head><title>foobar</title></head><body><h1>foobar</h1></body></html>"
     )

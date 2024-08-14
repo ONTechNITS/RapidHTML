@@ -4,9 +4,6 @@ import html
 import inspect
 import typing
 
-from collections.abc import Iterable, Sequence
-
-# from rapidhtml.style import StyleSheet
 from rapidhtml.utils import get_app
 
 if typing.TYPE_CHECKING:
