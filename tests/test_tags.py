@@ -26,6 +26,19 @@ def test_render_with_attributes():
     assert test_html.render() == expected_html
 
 
+def test_render_with_boolean_attributes():
+    test_html = Html(
+        Body(
+            H1("foobar", id="foo", class_="bar", disabled=True),
+        )
+    )
+
+    expected_html = (
+        "<html><body><h1 id='foo' class='bar' disabled>foobar</h1></body></html>"
+    )
+    assert test_html.render() == expected_html
+
+
 def test_render_with_head():
     # Test with a single tag
     test_html = Html(
