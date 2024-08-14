@@ -183,8 +183,7 @@ class BaseTag:
         for i, tag in enumerate(self.tags):
             if not isinstance(tag, BaseTag):
                 continue
-            tag_name = tag.tag_name
-            if tag_name == select_tag_name or tag_name == f"htmltag{select_tag_name}":
+            if tag.tag_name == select_tag_name:
                 self_matches.append((i, tag))
                 if first_match:
                     break
