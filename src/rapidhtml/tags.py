@@ -190,7 +190,7 @@ class BaseTag:
         elif inspect.isclass(select_tag) and issubclass(select_tag, BaseTag):
             select_tag_name = select_tag.__name__.lower()
         elif isinstance(select_tag, str):
-            select_tag_name = select_tag
+            select_tag_name = select_tag.lower()
         else:
             raise TypeError(f"Unexpected tag type {type(select_tag)}. {select_tag}")
 
@@ -200,8 +200,7 @@ class BaseTag:
         for i, tag in enumerate(self.tags):
             if not isinstance(tag, BaseTag):
                 continue
-            tag_name = tag.tag_name
-            if tag_name == select_tag_name or tag_name == f"htmltag{select_tag_name}":
+            if tag.tag_name == select_tag_name:
                 self_matches.append((i, tag))
                 if first_match:
                     break
