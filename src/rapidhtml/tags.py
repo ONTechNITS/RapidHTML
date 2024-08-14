@@ -1,16 +1,20 @@
 from __future__ import annotations
 
 import html
+import inspect
 import typing
 
 from collections.abc import Iterable
 
-from rapidhtml.style import StyleSheet
+# from rapidhtml.style import StyleSheet
 from rapidhtml.utils import get_app
 
 if typing.TYPE_CHECKING:
     from rapidhtml import RapidHTML
     from starlette.applications import Starlette
+
+
+T = typing.TypeVar("T")
 
 
 class BaseTag:
@@ -32,7 +36,9 @@ class BaseTag:
         render(): Renders the HTML representation of the tag and its child tags.
     """
 
-    def __init__(self, *tags, callback: typing.Callable = None, **attrs):
+    def __init__(
+        self, *tags: "BaseTag" | str, callback: typing.Callable = None, **attrs
+    ):
         self.tag = self.__class__.__qualname__.lower()
         self.tags = list(tags)
         self.attrs = attrs
@@ -49,6 +55,16 @@ class BaseTag:
     def __init_subclass__(cls, self_closing: bool = False, **kwargs) -> None:
         super().__init_subclass__(**kwargs)
         cls.__self_closing = self_closing
+
+    @property
+    def tag_name(self) -> str:
+        """
+        Returns the name of the tag.
+
+        Returns:
+            str: The name of the tag.
+        """
+        return self.tag
 
     @property
     def app(self) -> "RapidHTML" | "Starlette":
@@ -114,7 +130,7 @@ class BaseTag:
 
         # Recursively render child tags
         for tag in self.tags:
-            if isinstance(tag, (BaseTag, StyleSheet)):
+            if isinstance(tag, BaseTag):
                 ret_html += tag.render()
             elif hasattr(tag, "__str__"):
                 ret_html += html.escape(str(tag))
@@ -125,6 +141,99 @@ class BaseTag:
         ret_html += self.__closing_tag
 
         return ret_html
+
+    def select(
+        self,
+        select_tag: typing.Type["BaseTag"] | str,
+        *,
+        recurse: bool = False,
+        pop: bool = False,
+        first_match: bool = False,
+    ) -> list["BaseTag"]:
+        """
+        Selects and returns a list of BaseTag objects that match the given tag name or BaseTag object.
+
+        Args:
+            tag (Type[BaseTag] or str): The uninstantiated subclass of BaseTag or the tag name to match against.
+            recurse (bool, optional): If True, recursively searches for matching tags within nested BaseTag objects. Defaults to False.
+            pop (bool, optional): If True, removes the selected tags from the current object. Defaults to False.
+            first_match (bool, optional): If True, stops searching after finding the first match. Defaults to False.
+
+        Returns:
+            list[BaseTag]: A list of BaseTag objects that match the given tag name or BaseTag object.
+
+        Raises:
+            KeyError: If no matching tags are found and pop is True.
+            ValueError: If an instantiated object is passed as the tag parameter.
+            TypeError: If the tag parameter is of an unexpected type.
+
+        """
+        if isinstance(select_tag, BaseTag):
+            raise ValueError("Cannot pass instantiated object to select method!")
+        elif inspect.isclass(select_tag) and issubclass(select_tag, BaseTag):
+            select_tag_name = select_tag.__name__.lower()
+        elif isinstance(select_tag, str):
+            select_tag_name = select_tag
+        else:
+            raise TypeError(f"Unexpected tag type {type(select_tag)}. {select_tag}")
+
+        ret_tags: list["BaseTag"] = []
+        self_matches: list[tuple[int, "BaseTag"]] = []
+
+        for i, tag in enumerate(self.tags):
+            if not isinstance(tag, BaseTag):
+                continue
+            tag_name = tag.tag_name
+            if tag_name == select_tag_name or tag_name == f"htmltag{select_tag_name}":
+                self_matches.append((i, tag))
+                if first_match:
+                    break
+            elif recurse and isinstance(tag, BaseTag):
+                sub_ret_tags = tag.select(
+                    select_tag, recurse=recurse, pop=pop, first_match=first_match
+                )
+                if sub_ret_tags:
+                    ret_tags.extend(sub_ret_tags)
+                    if first_match:
+                        break
+
+        if not (ret_tags or self_matches) and pop:
+            raise KeyError(f"Unable to find tag {select_tag}")
+
+        # Pop in reverse order to avoid IndexError!
+        for i, tag in sorted(self_matches, reverse=True, key=lambda tpl: tpl[0]):
+            if pop:
+                self.tags.pop(i)
+            ret_tags.append(tag)
+
+        return ret_tags
+
+    def pop(self, tag: typing.Type["BaseTag"] | str, *default: T) -> "BaseTag" | T:
+        """
+        Selects and removes the first occurrence of a tag that matches the given tag name or BaseTag object.
+        If no matching tag is found, it returns the default value or raises a KeyError if no default is provided.
+
+        Args:
+            tag (Type[BaseTag] or str): The uninstantiated subclass of BaseTag or the tag name to match against.
+            *default (Optional[T]): Optional default value to return if no matching tag is found. Defaults to None.
+
+        Returns:
+            BaseTag or T: The selected tag or the default value if no matching tag is found.
+
+        Raises:
+            KeyError: If no matching tags are found and no default value is provided.
+            ValueError: If an instantiated object is passed as the tag parameter.
+            TypeError: If the tag parameter is of an unexpected type.
+
+        """
+        if default and len(default) > 1:
+            raise TypeError("pop expected at most 2 arguments, more")
+        try:
+            return self.select(tag, pop=True, first_match=True)[0]
+        except KeyError:
+            if default:
+                return default[0]
+            raise
 
 
 class HtmlTagA(BaseTag): ...
