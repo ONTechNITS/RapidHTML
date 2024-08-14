@@ -46,7 +46,7 @@ class RapidHTMLRoute(Route):
 
         # Handle different response types
         if isinstance(response, BaseTag):
-            response.add_head(self.html_head)
+            response.add_head(*self.html_head)
             response = RapidHTMLResponse(response)
         elif isinstance(response, dict):
             response = JSONResponse(response)
