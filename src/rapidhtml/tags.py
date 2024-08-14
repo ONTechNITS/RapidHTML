@@ -14,6 +14,16 @@ if typing.TYPE_CHECKING:
     from starlette.applications import Starlette
 
 
+BOOLEAN_ATTRS = [
+    "autofocus",
+    "checked",
+    "disabled",
+    "multiple",
+    "readonly",
+    "required",
+    "webkitdirectory",
+]
+
 class BaseTag:
     """
     Represents a base HTML tag.
@@ -110,7 +120,7 @@ class BaseTag:
             if value is None:
                 value = "none"
 
-            if value is True:
+            if key in BOOLEAN_ATTRS:
                 ret_html += f"{key} "
                 continue
 
