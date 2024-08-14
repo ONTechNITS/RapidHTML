@@ -25,3 +25,9 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+If possible, please provide the output of these commands:
+```bash
+uname -a
+python --version
+python -m pip freeze
+```
