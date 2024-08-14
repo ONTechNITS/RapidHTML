@@ -115,14 +115,15 @@ class BaseTag:
 
         for key, value in self.attrs.items():
             key = key.rstrip("_")
-
-            # Translate value None to 'none'
-            if value is None:
-                value = "none"
-
+                
+            # Handle boolean attributes
             if key in BOOLEAN_ATTRS:
                 ret_html += f"{key} "
                 continue
+            
+            # Translate value None, True, or False to strings              
+            if value in (None, True, False):
+                value = str(value).lower()
 
             # Replace underscores with hyphens
             key = key.replace("_", "-")
