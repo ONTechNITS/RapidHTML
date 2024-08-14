@@ -256,6 +256,21 @@ class Form(BaseTag): ...
 class H1(BaseTag): ...
 
 
+class H2(BaseTag): ...
+
+
+class H3(BaseTag): ...
+
+
+class H4(BaseTag): ...
+
+
+class H5(BaseTag): ...
+
+
+class H6(BaseTag): ...
+
+
 class Head(BaseTag): ...
 
 
@@ -512,6 +527,11 @@ __all__ = (
     "Footer",
     "Form",
     "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H6",
     "Head",
     "Header",
     "Hgroup",
