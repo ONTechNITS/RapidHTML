@@ -44,7 +44,10 @@ class BaseTag:
     """
 
     def __init__(
-        self, *tags: "BaseTag" | str, callback: typing.Callable | RapidHTMLCallback = None, **attrs
+        self,
+        *tags: "BaseTag" | str,
+        callback: typing.Callable | RapidHTMLCallback = None,
+        **attrs,
     ):
         self.tag = self.__class__.__qualname__.lower().replace("htmltag", "")
         self.tags = list(tags)
