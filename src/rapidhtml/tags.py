@@ -173,7 +173,7 @@ class BaseTag:
         elif inspect.isclass(select_tag) and issubclass(select_tag, BaseTag):
             select_tag_name = select_tag.__name__.lower()
         elif isinstance(select_tag, str):
-            select_tag_name = select_tag
+            select_tag_name = select_tag.lower()
         else:
             raise TypeError(f"Unexpected tag type {type(select_tag)}. {select_tag}")
 
