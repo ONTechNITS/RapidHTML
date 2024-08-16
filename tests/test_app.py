@@ -1,3 +1,5 @@
+import pathlib
+
 import pytest
 
 from starlette.testclient import TestClient
@@ -34,6 +36,16 @@ def test_app(client):
 
 
 def test_favicon(client):
+    response = client.get("/favicon.ico")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "image/svg+xml"
+    assert response.content == get_default_favicon()
+
+
+def test_user_favicon():
+    path = pathlib.Path(__file__).parent
+    app = RapidHTML(favicon_path=f"{path}/../src/rapidhtml/static/RapidHTML.svg")
+    client = TestClient(app)
     response = client.get("/favicon.ico")
     assert response.status_code == 200
     assert response.headers["content-type"] == "image/svg+xml"
