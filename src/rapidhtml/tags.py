@@ -5,6 +5,7 @@ import inspect
 import typing
 import inspect
 
+from rapidhtml.bases import Renderable
 from rapidhtml.callbacks import RapidHTMLCallback
 from rapidhtml.utils import get_app, dataclass_transform
 
@@ -59,7 +60,7 @@ class BaseDataclass:
         cls.__new__ = func
 
 
-class BaseTag(BaseDataclass):
+class BaseTag(BaseDataclass, Renderable):
     """
     Represents a base HTML tag.
 
@@ -102,7 +103,12 @@ class BaseTag(BaseDataclass):
     title: str = None
     translate: str = None
 
-    def __init__(self, *tags: "BaseTag" | str, callback: typing.Callable | RapidHTMLCallback = None, **attrs):
+    def __init__(
+        self,
+        *tags: "BaseTag" | str,
+        callback: typing.Callable | RapidHTMLCallback = None,
+        **attrs,
+    ):
         self.tag = self.__class__.__qualname__.lower().replace("htmltag", "")
         self.tags = list(tags)
         self.attrs = attrs
@@ -205,7 +211,7 @@ class BaseTag(BaseDataclass):
 
         # Recursively render child tags
         for tag in self.tags:
-            if isinstance(tag, BaseTag):
+            if isinstance(tag, Renderable):
                 ret_html += tag.render()
             elif hasattr(tag, "__str__"):
                 ret_html += html.escape(str(tag))
