@@ -1,6 +1,8 @@
 # RapidHTML
 
-A project for developing web apps totally in Python
+A PEP8-compliant, well documented and typehinted framework for creating web apps
+in a purely Pythonic way. Powered by Javacsript frameworks like HTMX, and with
+CSS built-in, write more Python and less of everything else.
 
 ## Example
 
