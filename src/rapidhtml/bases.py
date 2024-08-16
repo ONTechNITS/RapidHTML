@@ -10,5 +10,6 @@ class Renderable:
     `render` method. The ooutput of this method should be a string that can be
     used in a modern web browser.
     """
+
     @abc.abstractmethod
     def render(self) -> str: ...

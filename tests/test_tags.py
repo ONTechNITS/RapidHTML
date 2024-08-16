@@ -110,9 +110,9 @@ def test_base_dataclass():
     assert child.c == "c"
 
     child = Child()
-    assert child.a == None
-    assert child.b == None
-    assert child.c == None
+    assert child.a is None
+    assert child.b is None
+    assert child.c is None
 
     with pytest.raises(AttributeError):
         Child(d="d")

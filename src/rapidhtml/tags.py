@@ -3,7 +3,6 @@ from __future__ import annotations
 import html
 import inspect
 import typing
-import inspect
 
 from rapidhtml.bases import Renderable
 from rapidhtml.callbacks import RapidHTMLCallback
