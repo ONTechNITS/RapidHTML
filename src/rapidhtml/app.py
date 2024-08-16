@@ -1,15 +1,20 @@
 from __future__ import annotations
 
-import warnings
 import typing
 import inspect
+import warnings
+
+from pathlib import Path
+
 import uvicorn
 
 from starlette.applications import Starlette
-from pathlib import Path
+from starlette.responses import Response
 
-from rapidhtml.tags import Script
+from rapidhtml.tags import Script, Title
+from rapidhtml.utils import get_default_favicon
 from rapidhtml.routing import RapidHTMLRouter, RapidHTMLWSEndpoint
+
 
 JS_RELOAD_SCRIPT = """
 const sock = new WebSocket(`ws://${window.location.host}/live-reload`);
@@ -39,7 +44,13 @@ class RapidHTML(Starlette):
     """
 
     def __init__(
-        self, *args, html_head: typing.Iterable = None, reload: bool = False, **kwargs
+        self,
+        *args,
+        html_head: typing.Iterable = None,
+        reload: bool = False,
+        title: str = "RapidHTML",
+        favicon_path: str | Path = None,
+        **kwargs,
     ) -> None:
         """
         Initializes the RapidHTML application.
@@ -48,13 +59,22 @@ class RapidHTML(Starlette):
                 html_head (typing.Iterable, optional): Tags to inject into each
                     page's <head>. Defaults to None.
                 reload (bool, optional): Enables live-reloading. Defaults to False.
+                title (str, optional): Title of the application. Can be overridden
+                    on a per-page basis by adding a Title() tag to the response.
+                    Defaults to "RapidHTML".
+                favicon_path (str | Path, optional): Path to the desired
+                    favicon. If no path is provided the default RapidHTML favicon
+                    will be used instead.
+                    Defaults to None.
         """
         super().__init__(*args, **kwargs)
 
         self.reload = reload
-        self.html_head = (Script(src="https://unpkg.com/htmx.org@2.0.1"),) + tuple(
-            html_head or ()
-        )
+        self.favicon_path = favicon_path
+        self.html_head = (
+            Title(title),
+            Script(src="https://unpkg.com/htmx.org@2.0.1"),
+        ) + tuple(html_head or ())
 
         if reload:
             self.html_head += (Script(JS_RELOAD_SCRIPT),)
@@ -62,6 +82,18 @@ class RapidHTML(Starlette):
             self.router.add_websocket_route("/live-reload", _ReloadSocket)
         else:
             self.router = RapidHTMLRouter(html_head=self.html_head)
+
+        # Get the favicon and store it
+        if favicon_path is None:
+            self.favicon_data = get_default_favicon()
+        else:
+            with open(favicon_path, "rb") as f:
+                self.favicon_data = f.read()
+
+        @self.route("/favicon.ico")
+        async def favicon_route():
+            nonlocal self
+            return Response(self.favicon_data, media_type="image/svg+xml")
 
     def serve(self, appname=None, *args, **kwargs):
         if "reload" in kwargs:
