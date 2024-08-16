@@ -44,9 +44,13 @@ class RapidHTML(Starlette):
     """
 
     def __init__(
-        self, *args, html_head: typing.Iterable = None, reload: bool = False,
+        self,
+        *args,
+        html_head: typing.Iterable = None,
+        reload: bool = False,
         title: str = "RapidHTML",
-        favicon_path: str | Path = None, **kwargs
+        favicon_path: str | Path = None,
+        **kwargs,
     ) -> None:
         """
         Initializes the RapidHTML application.
@@ -67,9 +71,10 @@ class RapidHTML(Starlette):
 
         self.reload = reload
         self.favicon_path = favicon_path
-        self.html_head = (Title(title), Script(src="https://unpkg.com/htmx.org@2.0.1"),) + tuple(
-            html_head or ()
-        )
+        self.html_head = (
+            Title(title),
+            Script(src="https://unpkg.com/htmx.org@2.0.1"),
+        ) + tuple(html_head or ())
 
         if reload:
             self.html_head += (Script(JS_RELOAD_SCRIPT),)
