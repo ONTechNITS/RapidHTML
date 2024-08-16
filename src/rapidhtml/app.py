@@ -9,7 +9,7 @@ from pathlib import Path
 import uvicorn
 
 from starlette.applications import Starlette
-from starlette.responses import FileResponse, Response
+from starlette.responses import Response
 
 from rapidhtml.tags import Script, Title
 from rapidhtml.utils import get_default_favicon
