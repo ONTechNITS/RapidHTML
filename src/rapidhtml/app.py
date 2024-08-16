@@ -83,15 +83,17 @@ class RapidHTML(Starlette):
         else:
             self.router = RapidHTMLRouter(html_head=self.html_head)
 
+        # Get the favicon and store it
+        if favicon_path is None:
+            self.favicon_data = get_default_favicon()
+        else:
+            with open(favicon_path, "rb") as f:
+                self.favicon_data = f.read()
+
         @self.route("/favicon.ico")
         async def favicon_route():
-            nonlocal favicon_path
-
-            if favicon_path is None:
-                return Response(get_default_favicon(), media_type="image/svg+xml")
-
-            with open(favicon_path, "rb") as f:
-                return FileResponse(f.read())
+            nonlocal self
+            return Response(self.favicon_data, media_type="image/svg+xml")
 
     def serve(self, appname=None, *args, **kwargs):
         if "reload" in kwargs:
