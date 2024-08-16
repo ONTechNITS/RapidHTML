@@ -10,3 +10,5 @@ Python script that you can run to see the output.
    :caption: Examples:
 
    examples/hello_world
+   examples/live_reload
+   examples/tag_callbacks
