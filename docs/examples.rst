@@ -11,3 +11,4 @@ Python script that you can run to see the output.
 
    examples/hello_world
    examples/live_reload
+   examples/tag_callbacks

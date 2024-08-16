@@ -1,9 +1,13 @@
 from __future__ import annotations
 from typing import Any, Generator, Union
 
+from rapidhtml.tags import BaseTag
 
-class StyleSheet:
+
+class StyleSheet(BaseTag):
     def __init__(self, **styles):
+        super().__init__()
+
         self.__style_rules = styles
 
     @property
