@@ -1,10 +1,10 @@
 from __future__ import annotations
 from typing import Any, Generator, Union
 
-from rapidhtml.tags import BaseTag
+from rapidhtml.bases import Renderable
 
 
-class StyleSheet(BaseTag):
+class StyleSheet(Renderable):
     def __init__(self, **styles):
         super().__init__()
 

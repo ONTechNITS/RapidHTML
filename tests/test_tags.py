@@ -1,7 +1,9 @@
+import pytest
+
 from starlette.testclient import TestClient
 
 from rapidhtml import RapidHTML
-from rapidhtml.tags import Html, H1, Body, Title
+from rapidhtml.tags import Html, H1, Body, Title, BaseDataclass, Button
 
 
 def test_render():
@@ -29,13 +31,11 @@ def test_render_with_attributes():
 def test_render_with_boolean_attributes():
     test_html = Html(
         Body(
-            H1("foobar", id="foo", class_="bar", disabled=True),
+            Button("foobar", id="foo", class_="bar", disabled=True),
         )
     )
 
-    expected_html = (
-        "<html><body><h1 id='foo' class='bar' disabled>foobar</h1></body></html>"
-    )
+    expected_html = "<html><body><button id='foo' class='bar' disabled>foobar</button></body></html>"
     assert test_html.render() == expected_html
 
 
@@ -90,3 +90,29 @@ def test_tag_callback():
     client = TestClient(test_app)
     response = client.get(test_html.attrs["hx-get"])
     assert response.text == "Callback"
+
+
+def test_base_dataclass():
+    class Parent(BaseDataclass):
+        a: str = None
+        b: int = None
+
+    assert Parent().__annotations__ == {"a": str, "b": int}
+
+    class Child(Parent):
+        c: str = None
+
+    assert Child().__annotations__ == {"a": str, "b": int, "c": str}
+
+    child = Child(a="a", b=1, c="c")
+    assert child.a == "a"
+    assert child.b == 1
+    assert child.c == "c"
+
+    child = Child()
+    assert child.a is None
+    assert child.b is None
+    assert child.c is None
+
+    with pytest.raises(AttributeError):
+        Child(d="d")
