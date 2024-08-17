@@ -1,7 +1,7 @@
 import abc
 
 
-class Renderable:
+class Renderable(abc.ABC):
     """
     Base renderable class
 
