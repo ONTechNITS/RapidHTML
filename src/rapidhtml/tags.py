@@ -103,7 +103,7 @@ class BaseTag(BaseDataclass, Renderable):
     tabindex: Optional[str] = None
     title: Optional[str] = None
     translate: Optional[str] = None
-    
+
     # HTMX atrributes
     # https://htmx.org/reference/
     hx_get: Optional[str] = None
