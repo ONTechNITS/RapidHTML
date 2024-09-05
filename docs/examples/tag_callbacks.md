@@ -1,8 +1,6 @@
-Tag Callbacks
-=============
+# Tag Callbacks
 
-Usage
------
+## Usage
 
 Creating a route for each action you want to perform in your application can 
 quickly become cumbersome. To simplify this process, RapidHTML provides the
@@ -15,29 +13,29 @@ Here is an example that demonstrates how to use the `callback` attribute to defi
 a callback function for a button that updates the page with the current time when
 clicked:
 
-.. code-block:: python
+```python title="tag_callbacks.py"
+import datetime
+from rapidhtml import RapidHTML
+from rapidhtml.tags import *
 
-    import datetime
-    from rapidhtml import RapidHTML
-    from rapidhtml.tags import *
+app = RapidHTML()
 
-    app = RapidHTML()
+async def update_time(request):
+    return datetime.datetime.now().strftime("%H:%M:%S")
 
-    async def update_time(request):
-        return datetime.datetime.now().strftime("%H:%M:%S")
-
-    @app.route("/")
-    async def homepage(request):
-        return Html(
-                Div(
-                    H1("Hello, world!"),
-                    Button("Click me", id="button", 
-                        callback=update_time, hx_target="#time"),
-                    P(id="time"),
-                )
+@app.route("/")
+async def homepage(request):
+    return Html(
+            Div(
+                H1("Hello, world!"),
+                Button("Click me", id="button", 
+                    callback=update_time, hx_target="#time"),
+                P(id="time"),
             )
+        )
 
-    app.serve()
+app.serve()
+```
 
 In this example, the `update_time` function is defined as an asynchronous function
 that returns the current time in the format `'%H:%M:%S'`. The `Button` element
@@ -56,8 +54,7 @@ route that the callback function is defined on.
 You can read more about HTMX attributes in the 
 `HTMX documentation <https://htmx.org/reference/>`_.
 
-The `RapidHTMLCallback` class
------------------------------
+## The `RapidHTMLCallback` class
 
 To make it easier to define callback functions, and allow you to send any type of
 request you'd like, RapidHTML provides the `RapidHTMLCallback` class. This class
@@ -68,9 +65,7 @@ Here is an example that demonstrates how to use the `RapidHTMLCallback` class to
 define a callback function for a button that updates the page with the current time
 when clicked:
 
-.. code-block:: python
-    :emphasize-lines: 5, 15-19, 24
-
+```python hl_lines="5 15-19 24"
     import datetime
     from rapidhtml import RapidHTML
     from rapidhtml.tags import *
@@ -100,4 +95,4 @@ when clicked:
             )
 
     app.serve()
-
+```
