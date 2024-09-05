@@ -1,0 +1,10 @@
+rapidhtml.utils package
+=======================
+
+Module contents
+---------------
+
+.. automodule:: rapidhtml.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,54 @@
+RapidHTML
+=========
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   rapidhtml.style
+   rapidhtml.utils
+
+
+RapidHTML App
+-------------
+
+.. automodule:: rapidhtml.app
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Tags
+----
+
+.. automodule:: rapidhtml.tags
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rapidhtml.responses module
+--------------------------
+
+.. automodule:: rapidhtml.responses
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rapidhtml.routing module
+------------------------
+
+.. automodule:: rapidhtml.routing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: rapidhtml
+   :members:
+   :undoc-members:
+   :show-inheritance:
