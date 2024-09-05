@@ -1,7 +1,0 @@
-rapidhtml
-=========
-
-.. toctree::
-   :maxdepth: 4
-
-   rapidhtml
