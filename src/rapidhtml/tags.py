@@ -5,6 +5,7 @@ import inspect
 import typing
 from uuid import uuid4
 
+import rapidhtml.exceptions as custom_exceptions
 from rapidhtml.bases import Renderable
 from rapidhtml.callbacks import RapidHTMLCallback
 from rapidhtml.utils import get_app, dataclass_transform
@@ -134,15 +135,15 @@ class BaseTag(BaseDataclass, Renderable):
     def _uuid(self) -> str:
         return self.__uuid
 
-    def validate_cyclical_references(
-        self, *new_tags: "BaseTag", _parents=None
+    def _validate_cyclical_references(
+        self, *new_tags: "BaseTag", _parents: typing.Optional[dict[str, str]]=None
     ) -> typing.Literal[True]:
         """
         Validates if there are any cyclical references within the tags.
 
         Args:
             *new_tags (BaseTag): Variable number of new tags to be checked for cyclical references.
-            _parents (List[str], optional): List of parent UUIDs. For internal recursive use only.
+            _parents (Dict[str, str], optional): List of parent UUIDs mapped to the tag name. For internal recursive use only.
 
         Raises:
             ValueError: If a cyclical reference is detected.
@@ -151,11 +152,11 @@ class BaseTag(BaseDataclass, Renderable):
             bool: True if no cyclical references are found.
         """
 
-        parents = _parents or []
+        parents = _parents or {}
 
         if self.__uuid in parents:
-            raise ValueError("Cyclical reference detected!")
-        parents.append(self.__uuid)
+            raise custom_exceptions.CyclicalTagError(f"Cyclical reference detected! {'->'.join(parents.values())}->{self.tag_name}")
+        parents[self.__uuid] = self.tag_name
 
         tag_iterator = new_tags or self.tags
 
@@ -165,7 +166,7 @@ class BaseTag(BaseDataclass, Renderable):
             if isinstance(tag, BaseTag):
                 if tag._uuid in visited_uuids:
                     continue
-                tag.validate_cyclical_references(_parents=parents.copy())
+                tag._validate_cyclical_references(_parents=parents.copy())
                 visited_uuids.append(tag._uuid)
         return True
 
@@ -223,12 +224,33 @@ class BaseTag(BaseDataclass, Renderable):
             self.tags.insert(0, Head(*new_head))
 
     def add_tag(self, *tag: "BaseTag") -> None:
-        """ """
-        if self.validate_cyclical_references(*tag):
+        """
+        Adds one or more child tags to the current tag.
+    
+        Args:
+            *tag (BaseTag): Variable number of child tags to be added.
+    
+        Returns:
+            None
+    
+        Raises:
+            ValueError: If the current tag does not support nesting other tags within it.
+    
+        """
+        if self._validate_cyclical_references(*tag):
             self.tags.extend(tag)
 
     def add_attr(self, **attrs) -> None:
-        """ """
+        """
+        Adds one or more attributes to the current tag.
+    
+        Args:
+            **attrs: Keyword arguments representing tag attributes to be added.
+    
+        Returns:
+            None
+    
+        """
         self.attrs.update(attrs)
 
     def render(self):
