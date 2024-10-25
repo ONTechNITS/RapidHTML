@@ -13,7 +13,7 @@ packages = [{ include = "rapidhtml", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-starlette = "^0.38.2"
+starlette = ">=0.38.2,<0.41.0"
 httpx = "^0.27.0"
 uvicorn = { version = "^0.30.5", extras = ["standard"] }
 
