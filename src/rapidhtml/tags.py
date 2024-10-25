@@ -136,7 +136,7 @@ class BaseTag(BaseDataclass, Renderable):
         return self.__uuid
 
     def _validate_cyclical_references(
-        self, *new_tags: "BaseTag", _parents: typing.Optional[dict[str, str]]=None
+        self, *new_tags: "BaseTag", _parents: typing.Optional[dict[str, str]] = None
     ) -> typing.Literal[True]:
         """
         Validates if there are any cyclical references within the tags.
@@ -155,7 +155,9 @@ class BaseTag(BaseDataclass, Renderable):
         parents = _parents or {}
 
         if self.__uuid in parents:
-            raise custom_exceptions.CyclicalTagError(f"Cyclical reference detected! {'->'.join(parents.values())}->{self.tag_name}")
+            raise custom_exceptions.CyclicalTagError(
+                f"Cyclical reference detected! {'->'.join(parents.values())}->{self.tag_name}"
+            )
         parents[self.__uuid] = self.tag_name
 
         tag_iterator = new_tags or self.tags
@@ -226,16 +228,16 @@ class BaseTag(BaseDataclass, Renderable):
     def add_tag(self, *tag: "BaseTag") -> None:
         """
         Adds one or more child tags to the current tag.
-    
+
         Args:
             *tag (BaseTag): Variable number of child tags to be added.
-    
+
         Returns:
             None
-    
+
         Raises:
             ValueError: If the current tag does not support nesting other tags within it.
-    
+
         """
         if self._validate_cyclical_references(*tag):
             self.tags.extend(tag)
@@ -243,13 +245,13 @@ class BaseTag(BaseDataclass, Renderable):
     def add_attr(self, **attrs) -> None:
         """
         Adds one or more attributes to the current tag.
-    
+
         Args:
             **attrs: Keyword arguments representing tag attributes to be added.
-    
+
         Returns:
             None
-    
+
         """
         self.attrs.update(attrs)
 
