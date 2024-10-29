@@ -1,0 +1,2 @@
+class CyclicalTagError(ValueError):
+    pass
