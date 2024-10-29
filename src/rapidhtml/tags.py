@@ -2,10 +2,9 @@ from __future__ import annotations
 
 import html
 import inspect
-import typing
 
 from uuid import uuid4
-from typing import Literal, Optional, Callable, Type
+from typing import Literal, Optional, Callable, Type, TYPE_CHECKING, TypeVar
 
 import rapidhtml.exceptions as custom_exceptions
 
@@ -13,12 +12,12 @@ from rapidhtml.bases import Renderable
 from rapidhtml.callbacks import RapidHTMLCallback
 from rapidhtml.utils import get_app, dataclass_transform
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from rapidhtml import RapidHTML
     from starlette.applications import Starlette
 
 
-T = typing.TypeVar("T")
+T = TypeVar("T")
 BOOLEAN_ATTRS = [
     "autofocus",
     "checked",
@@ -70,7 +69,7 @@ class BaseTag(BaseDataclass, Renderable):
 
     Args:
         *tags: Variable length arguments representing child tags.
-        callback (typing.Callable | RapidHTMLCallback): A callback function to be added to the tag.
+        callback (Callable | RapidHTMLCallback): A callback function to be added to the tag.
         **attrs: Keyword arguments representing tag attributes.
 
     Attributes:
@@ -210,8 +209,8 @@ class BaseTag(BaseDataclass, Renderable):
         return self.__uuid
 
     def _validate_cyclical_references(
-        self, *new_tags: "BaseTag", _parents: typing.Optional[dict[str, str]] = None
-    ) -> typing.Literal[True]:
+        self, *new_tags: "BaseTag", _parents: Optional[dict[str, str]] = None
+    ) -> Literal[True]:
         """
         Validates if there are any cyclical references within the tags.
 
@@ -271,7 +270,7 @@ class BaseTag(BaseDataclass, Renderable):
         Adds a callback function to the tag.
 
         Args:
-            callback (typing.Callable): The callback function to be added.
+            callback (Callable): The callback function to be added.
         """
         method = "get"
         if isinstance(callback, RapidHTMLCallback):
@@ -444,7 +443,7 @@ class BaseTag(BaseDataclass, Renderable):
 
         Args:
             tag (Type[BaseTag] or str): The uninstantiated subclass of BaseTag or the tag name to match against.
-            *default (typing.Optional[T]): typing.Optional default value to return if no matching tag is found. Defaults to None.
+            *default (Optional[T]): Optional default value to return if no matching tag is found. Defaults to None.
 
         Returns:
             BaseTag or T: The selected tag or the default value if no matching tag is found.
