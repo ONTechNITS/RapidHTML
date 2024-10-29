@@ -2,20 +2,22 @@ from __future__ import annotations
 
 import html
 import inspect
-import typing
+
 from uuid import uuid4
+from typing import Literal, Optional, Callable, Type, TYPE_CHECKING, TypeVar
 
 import rapidhtml.exceptions as custom_exceptions
+
 from rapidhtml.bases import Renderable
 from rapidhtml.callbacks import RapidHTMLCallback
 from rapidhtml.utils import get_app, dataclass_transform
 
-if typing.TYPE_CHECKING:
+if TYPE_CHECKING:
     from rapidhtml import RapidHTML
     from starlette.applications import Starlette
 
 
-T = typing.TypeVar("T")
+T = TypeVar("T")
 BOOLEAN_ATTRS = [
     "autofocus",
     "checked",
@@ -67,7 +69,7 @@ class BaseTag(BaseDataclass, Renderable):
 
     Args:
         *tags: Variable length arguments representing child tags.
-        callback (typing.Callable | RapidHTMLCallback): A callback function to be added to the tag.
+        callback (Callable | RapidHTMLCallback): A callback function to be added to the tag.
         **attrs: Keyword arguments representing tag attributes.
 
     Attributes:
@@ -81,33 +83,104 @@ class BaseTag(BaseDataclass, Renderable):
     """
 
     # RapidHTML attributes
-    callback: typing.Callable = None
+    callback: Optional[Callable] = None
 
     # Global attributes
     # https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes
-    accesskey: str = None
-    class_: str = None
-    contenteditable: str = None
-    data: str = None
-    dir: str = None
-    draggable: str = None
-    enterkeyhint: str = None
-    hidden: str = None
-    id: str = None
-    inert: str = None
-    inputmode: str = None
-    lang: str = None
-    popover: str = None
-    spellcheck: str = None
-    style: str = None
-    tabindex: str = None
-    title: str = None
-    translate: str = None
+    accesskey: Optional[str] = None
+    class_: Optional[str] = None
+    contenteditable: Optional[str] = None
+    data: Optional[str] = None
+    dir: Optional[str] = None
+    draggable: Optional[str] = None
+    enterkeyhint: Optional[str] = None
+    hidden: Optional[str] = None
+    id: Optional[str] = None
+    inert: Optional[str] = None
+    inputmode: Optional[str] = None
+    lang: Optional[str] = None
+    popover: Optional[str] = None
+    spellcheck: Optional[str] = None
+    style: Optional[str] = None
+    tabindex: Optional[str] = None
+    title: Optional[str] = None
+    translate: Optional[str] = None
+
+    # HTMX atrributes
+    # https://htmx.org/reference/
+    hx_get: Optional[str] = None
+    hx_post: Optional[str] = None
+    hx_delete: Optional[str] = None
+    hx_patch: Optional[str] = None
+    hx_put: Optional[str] = None
+    hx_on: Optional[tuple[str, str]] = None
+    hx_push_url: Optional[str] = None
+    hx_select: Optional[str] = None
+    hx_select_oob: Optional[str] = None
+    hx_swap: Optional[
+        Literal[
+            "innerHTML",
+            "outerHTML",
+            "textContent",
+            "beforebegin",
+            "afterbegin",
+            "beforeend",
+            "afterend",
+            "delete",
+            "none",
+        ]
+    ] = "innerHTML"
+    hx_swap_oob: Optional[
+        Literal[
+            "innerHTML",
+            "outerHTML",
+            "textContent",
+            "beforebegin",
+            "afterbegin",
+            "beforeend",
+            "afterend",
+            "delete",
+            "none",
+        ]
+    ] = None
+    hx_target: Optional[str] = None
+    hx_trigger: Optional[str] = None
+    hx_vals: Optional[dict] = None
+    hx_boost: Optional[bool] = None
+    hx_confirm: Optional[str] = None
+    hx_disable: Optional[bool] = None
+    hx_disabled_elt: Optional[str] = None
+    hx_disinherit: Optional[str] = None
+    hx_encoding: Optional[str] = None
+    hx_ext: Optional[str] = None
+    hx_headers: Optional[dict] = None
+    hx_history: Optional[bool] = None
+    hx_history_elt: Optional[bool] = None
+    hx_include: Optional[str] = None
+    hx_indicator: Optional[str] = None
+    hx_inherit: Optional[str] = None
+    hx_params: Optional[str] = None
+    hx_preserve: Optional[bool] = None
+    hx_prompt: Optional[str] = None
+    hx_replace_url: Optional[str] = None
+    hx_request: Optional[str | dict] = None
+    hx_sync: Optional[
+        Literal[
+            "drop",
+            "abort",
+            "replace",
+            "queue",
+            "queue first",
+            "queue last",
+            "queue all",
+        ]
+    ] = None
+    hx_validate: Optional[bool] = None
 
     def __init__(
         self,
         *tags: "BaseTag" | str,
-        callback: typing.Callable | RapidHTMLCallback = None,
+        callback: Callable | RapidHTMLCallback = None,
         **attrs,
     ):
         self.tag = self.__class__.__qualname__.lower().replace("htmltag", "")
@@ -136,8 +209,8 @@ class BaseTag(BaseDataclass, Renderable):
         return self.__uuid
 
     def _validate_cyclical_references(
-        self, *new_tags: "BaseTag", _parents: typing.Optional[dict[str, str]] = None
-    ) -> typing.Literal[True]:
+        self, *new_tags: "BaseTag", _parents: Optional[dict[str, str]] = None
+    ) -> Literal[True]:
         """
         Validates if there are any cyclical references within the tags.
 
@@ -192,12 +265,12 @@ class BaseTag(BaseDataclass, Renderable):
         """
         return get_app()
 
-    def add_callback(self, callback: typing.Callable | RapidHTMLCallback):
+    def add_callback(self, callback: Callable | RapidHTMLCallback):
         """
         Adds a callback function to the tag.
 
         Args:
-            callback (typing.Callable): The callback function to be added.
+            callback (Callable): The callback function to be added.
         """
         method = "get"
         if isinstance(callback, RapidHTMLCallback):
@@ -300,7 +373,7 @@ class BaseTag(BaseDataclass, Renderable):
 
     def select(
         self,
-        select_tag: typing.Type["BaseTag"] | str,
+        select_tag: Type["BaseTag"] | str,
         *,
         recurse: bool = False,
         pop: bool = False,
@@ -363,7 +436,7 @@ class BaseTag(BaseDataclass, Renderable):
 
         return ret_tags
 
-    def pop(self, tag: typing.Type["BaseTag"] | str, *default: T) -> "BaseTag" | T:
+    def pop(self, tag: Type["BaseTag"] | str, *default: T) -> "BaseTag" | T:
         """
         Selects and removes the first occurrence of a tag that matches the given tag name or BaseTag object.
         If no matching tag is found, it returns the default value or raises a KeyError if no default is provided.
