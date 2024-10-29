@@ -10,10 +10,13 @@ DEV ?= true
 .PHONY:help
 help:
 	@echo "Available targets:"
-	@echo "  install    Install dependencies"
-	@echo "  format     Format all code within src/rapidhtml"
-	@echo "  lint       Link all code within src/rapidhtml"
-	@echo "  lock       Update the poetry lock file"
+	@echo "  install    	Install dependencies"
+	@echo "  test 	 		Run tests"
+	@echo "  format     	Format all code within src/rapidhtml"
+	@echo "  lint       	Link all code within src/rapidhtml"
+	@echo "  lock       	Update the poetry lock file"
+	@echo "  docs-serve     Serve the documentation for editing purposes"
+	@echo "  docs-build     Build the documentation"
 
 .PHONY:install-dev
 install-dev:
@@ -48,12 +51,12 @@ lint:
 .PHONY:docs-serve
 docs-serve:
 	@echo "Serving docs"
-	@$(POETRY_BIN) run sphinx-autobuild --port 0 docs docs/_build
+	@$(POETRY_BIN) run mkdocs serve
 
 .PHONY:docs-build
 docs-build:
 	@echo "Building docs"
-	@$(POETRY_BIN) run sphinx-build docs docs/_build
+	@$(POETRY_BIN) run mkdocs build
 	
 .PHONY:test
 test:
