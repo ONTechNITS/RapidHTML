@@ -16,7 +16,7 @@ async def homepage(request):
     return Html(
             Div(
                 H1('Hello, world!'),
-                Button('Click me', id='button', hx_get='/data'),
+                Button('Click me', id='button', callback=data),
             )
         )
     
