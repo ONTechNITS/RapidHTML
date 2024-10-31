@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rapidhtml"
-version = "0.1.0"
+version = "0.1.1"
 description = "Web framework to generate web-based applications in pure python"
 authors = [
     "ThomasJRyan <18319621+ThomasJRyan@users.noreply.github.com>",
