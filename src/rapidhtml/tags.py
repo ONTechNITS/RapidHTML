@@ -335,7 +335,6 @@ class BaseTag(BaseDataclass, Renderable):
         Returns:
             str: The HTML representation of the tag and its child tags.
         """
-
         ret_html = f"<{self.tag} "
 
         for key, value in self.attrs.items():
@@ -362,7 +361,10 @@ class BaseTag(BaseDataclass, Renderable):
             if isinstance(tag, Renderable):
                 ret_html += tag.render()
             elif hasattr(tag, "__str__"):
-                ret_html += html.escape(str(tag))
+                if isinstance(self, Script):
+                    ret_html += str(tag)
+                else:
+                    ret_html += html.escape(str(tag))
             else:
                 raise TypeError(f"Unexpected tag type {type(tag)}. {tag}")
 
