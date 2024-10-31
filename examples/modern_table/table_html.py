@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from rapidhtml.tags import Table, Thead, Tr, Th, Tbody, Td
+from rapidhtml.components import Table
 
 WORKING_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
@@ -26,19 +26,9 @@ def load_database() -> list[Person]:
 
 
 def generate_html(*people: Person) -> Table:
-    table_header = Thead(
-        Tr(
-            Th("Name"), Th("Age"), Th("City"), Th("Profession")
-        )
-    )
+    table = Table()
 
-    table_rows = [
-        Tr(
-            Td(person.name), Td(person.age), Td(person.city), Td(person.profession)
-        )
-        for person in people
-    ]
-    table_body = Tbody(*table_rows)
-    table = Table(table_header, table_body, class_="styled-table")
+    table.columns = ["Name", "Age", "City", "Profession"]
+    table.add_rows(*people)
 
     return table
