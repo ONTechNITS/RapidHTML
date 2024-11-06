@@ -4,7 +4,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from rapidhtml.components import Table
+from rapidhtml.components import Table as ComponenetTable
 
 WORKING_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
@@ -25,10 +25,12 @@ def load_database() -> list[Person]:
     return [Person.model_validate(person) for person in data]
 
 
-def generate_html(*people: Person) -> Table:
-    table = Table()
+def generate_html(*people: Person) -> ComponenetTable:
+    table = ComponenetTable(class_="styled-table")
 
     table.columns = ["Name", "Age", "City", "Profession"]
-    table.add_rows(*people)
+    
+    for person in people:
+        table.add_row([person.name, str(person.age), person.city, person.profession])
 
     return table

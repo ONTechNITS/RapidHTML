@@ -298,7 +298,7 @@ class BaseTag(BaseDataclass, Renderable):
                 new_head = head
             self.tags.insert(0, Head(*new_head))
 
-    def add_tag(self, *tag: "BaseTag") -> None:
+    def add_tag(self, *tag: "BaseTag" | Renderable) -> None:
         """
         Adds one or more child tags to the current tag.
 

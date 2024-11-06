@@ -1,17 +1,24 @@
-from typing import Mapping
+from typing import Callable, Mapping
 
 from rapidhtml import tags as html_tags
 from rapidhtml.bases import Renderable
+from rapidhtml.callbacks import RapidHTMLCallback
 
 
-class Table(Renderable):
-    def __init__(self) -> None:
+class Table(html_tags.BaseTag):
+    def __init__(self, callback: Callable | RapidHTMLCallback = None, **attrs) -> None:
+        super().__init__("table", callback=callback, **attrs)
+        
         self.__columns: list[str] = []
         self.__data: list[Mapping[str, int | float | str]] = []
 
     @property
     def columns(self) -> list[str]:
         return self.__columns
+    
+    @property
+    def rows(self) -> list[Mapping[str, int | float | str]]:
+        return self.__data
 
     @columns.setter
     def columns(self, columns: list[str]) -> None:
@@ -39,21 +46,6 @@ class Table(Renderable):
         self.__data = []
 
     def render(self) -> str:
-        # table_headers = html_tags.Thead(
-        #     html_tags.Tr(*[
-        #         html_tags.Th(column_name) for column_name in self.__columns
-        #     ])
-        # )
-
-        # for row in self.__data:
-
-        # table_rows = [
-        #     Tr(
-        #         Td(row.get(column_name, ""))
-        #     )
-        # ]
-
-        table = html_tags.Table()
         thead = html_tags.Thead()
         tbody = html_tags.Tbody()
 
@@ -69,6 +61,6 @@ class Table(Renderable):
                 current_row.add_tag(html_tags.Td(row.get(column, "")))
             tbody.add_tag(current_row)
         
-        table.add_tag(thead, tbody)
+        self.tags = [thead, tbody]
 
-        return table.render()
+        return super().render()
