@@ -1,21 +1,20 @@
 from typing import Callable, Mapping
 
 from rapidhtml import tags as html_tags
-from rapidhtml.bases import Renderable
 from rapidhtml.callbacks import RapidHTMLCallback
 
 
 class Table(html_tags.BaseTag):
     def __init__(self, callback: Callable | RapidHTMLCallback = None, **attrs) -> None:
         super().__init__("table", callback=callback, **attrs)
-        
+
         self.__columns: list[str] = []
         self.__data: list[Mapping[str, int | float | str]] = []
 
     @property
     def columns(self) -> list[str]:
         return self.__columns
-    
+
     @property
     def rows(self) -> list[Mapping[str, int | float | str]]:
         return self.__data
@@ -60,7 +59,7 @@ class Table(html_tags.BaseTag):
             for column in self.__columns:
                 current_row.add_tag(html_tags.Td(row.get(column, "")))
             tbody.add_tag(current_row)
-        
+
         self.tags = [thead, tbody]
 
         return super().render()
