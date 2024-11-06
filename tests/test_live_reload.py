@@ -4,6 +4,9 @@ import httpx
 import pytest
 import os
 
+from rapidhtml.app import RapidHTML, JS_RELOAD_SCRIPT
+from rapidhtml.tags import Html, Head, Title
+
 TEST_FILE_HELLO = "live_reload/hello.py"
 TEST_FILE_GOODBYE = "live_reload/goodbye.py"
 SERVER_FILE = "server.py"
@@ -38,3 +41,17 @@ def test_live_reload(uvicorn_server):
     with open(TEST_FILE_GOODBYE) as f, open(SERVER_FILE, "w") as server_file:
         server_file.write(f.read())
     assert wait_for_reload(url, {"goodbye": "world"})
+
+
+def test_live_reload_html():
+    app = RapidHTML(reload=True)
+
+    html = Html(
+        Head(
+            Title("RapidHTML Example"),
+        ),
+    )
+
+    html.add_head(*app.html_head)
+
+    assert JS_RELOAD_SCRIPT in html.render()
